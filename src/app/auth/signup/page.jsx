@@ -14,14 +14,15 @@ import {
 } from "@heroui/react";
 import { Check } from "@gravity-ui/icons";
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function SignupForm() {
   const [role, setRole] = useState("member");
   const [imageUrl, setImageUrl] = useState("");
-
+   const router = useRouter();
   const onSubmit = async (e) => {
     e.preventDefault();
-
+   
     const formData = new FormData(e.currentTarget);
     const data = {};
 
@@ -45,6 +46,7 @@ export default function SignupForm() {
         image: data.imageUrl || undefined,
         role: data.role,
         plan: "free",
+        // autoSignIn: false,
       });
 
       if (error) {
@@ -54,7 +56,9 @@ export default function SignupForm() {
       }
 
       console.log("Logged in session info:", session);
-      alert("Signup Successful!");
+      await authClient.signOut();
+      alert("Signup Successful! Please Signin.");
+      router.push("/auth/signin");
     } catch (err) {
       console.error("Unexpected authentication failure:", err);
       alert("Something went wrong. Please try again.");
