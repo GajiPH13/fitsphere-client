@@ -1,0 +1,227 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import Link from "next/link";
+
+export default function EditForumPostPage() {
+  const { id } = useParams();
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+  const user = session?.user;
+  const role = user?.role;
+  const isAllowed = role === "trainer" || role === "admin";
+
+  const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
+
+  const [formData, setFormData] = useState({
+    title: "",
+    image: "",
+    shortDescription: "",
+    content: "",
+    category: "Fitness Tips",
+    status: "published",
+  });
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      if (isPending) return;
+
+      if (!user) {
+        router.push("/auth/signin");
+        return;
+      }
+
+      if (!isAllowed) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/api/forum-posts/${id}`);
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.message || "Post not found");
+          router.push(`/dashboard/${role}/forum`);
+          return;
+        }
+
+        setFormData({
+          title: data.title || "",
+          image: data.image || "",
+          shortDescription: data.shortDescription || "",
+          content: data.content || "",
+          category: data.category || "Fitness Tips",
+          status: data.status || "published",
+        });
+      } catch (error) {
+        console.error("Fetch post error:", error);
+        alert("Failed to load post.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) fetchPost();
+  }, [id, API_URL, user, role, isAllowed, isPending, router]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+
+    setUpdating(true);
+
+    try {
+      const res = await fetch(`${API_URL}/api/forum-posts/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Failed to update post");
+        return;
+      }
+
+      alert("Forum post updated successfully!");
+      router.push(`/dashboard/${role}/forum`);
+    } catch (error) {
+      console.error("Update post error:", error);
+      alert("Something went wrong.");
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  if (isPending || loading) {
+    return <p className="p-10 text-center">Loading post...</p>;
+  }
+
+  if (!isAllowed) {
+    return (
+      <main className="min-h-screen bg-[#EDF3E7] px-6 py-20 text-center">
+        <h1 className="text-3xl font-bold text-[#2F3A2F]">Access Denied</h1>
+        <p className="mt-3 text-[#5D6B57]">
+          Only trainers and admins can edit forum posts.
+        </p>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-[#EDF3E7] px-6 py-16 md:px-16 lg:px-24">
+      <section className="mx-auto max-w-4xl rounded-[36px] border border-white/40 bg-white/70 p-8 shadow-2xl backdrop-blur-2xl md:p-12">
+        <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-center">
+          <div>
+            <h1 className="text-4xl font-black text-[#2F3A2F]">
+              Edit Forum Post
+            </h1>
+            <p className="mt-2 text-[#5D6B57]">
+              Update your community article.
+            </p>
+          </div>
+
+          <Link
+            href={`/dashboard/${role}/forum`}
+            className="rounded-full border border-[#A3B18A] px-5 py-3 text-center font-semibold text-[#2F3A2F] hover:bg-[#DDE5D0]"
+          >
+            Back
+          </Link>
+        </div>
+
+        <form onSubmit={handleUpdate} className="space-y-6">
+          <input
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            placeholder="Post title"
+            required
+            className="w-full rounded-2xl border border-[#A3B18A] bg-white/80 p-4 text-[#2F3A2F] outline-none focus:ring-2 focus:ring-[#6B8E23]/30"
+          />
+
+          <input
+            name="image"
+            value={formData.image}
+            onChange={handleChange}
+            placeholder="Image URL"
+            required
+            className="w-full rounded-2xl border border-[#A3B18A] bg-white/80 p-4 text-[#2F3A2F] outline-none focus:ring-2 focus:ring-[#6B8E23]/30"
+          />
+
+          <textarea
+            name="shortDescription"
+            value={formData.shortDescription}
+            onChange={handleChange}
+            placeholder="Short description"
+            rows="3"
+            required
+            className="w-full rounded-2xl border border-[#A3B18A] bg-white/80 p-4 text-[#2F3A2F] outline-none focus:ring-2 focus:ring-[#6B8E23]/30"
+          />
+
+          <textarea
+            name="content"
+            value={formData.content}
+            onChange={handleChange}
+            placeholder="Full content"
+            rows="8"
+            required
+            className="w-full rounded-2xl border border-[#A3B18A] bg-white/80 p-4 text-[#2F3A2F] outline-none focus:ring-2 focus:ring-[#6B8E23]/30"
+          />
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className="w-full rounded-2xl border border-[#A3B18A] bg-white/80 p-4 text-[#2F3A2F] outline-none focus:ring-2 focus:ring-[#6B8E23]/30"
+            >
+              <option>Fitness Tips</option>
+              <option>Nutrition</option>
+              <option>Yoga</option>
+              <option>Strength Training</option>
+              <option>Recovery</option>
+              <option>Mindset</option>
+              <option>Workout Planning</option>
+            </select>
+
+            <select
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              className="w-full rounded-2xl border border-[#A3B18A] bg-white/80 p-4 text-[#2F3A2F] outline-none focus:ring-2 focus:ring-[#6B8E23]/30"
+            >
+              <option value="published">Published</option>
+              <option value="draft">Draft</option>
+            </select>
+          </div>
+
+          <button
+            type="submit"
+            disabled={updating}
+            className="w-full rounded-full bg-[#6B8E23] py-4 font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:bg-gray-400"
+          >
+            {updating ? "Updating..." : "Update Post"}
+          </button>
+        </form>
+      </section>
+    </main>
+  );
+}

@@ -105,6 +105,7 @@ export default function CreateForumPostPage() {
         status: formData.status,
         authorName: user.name,
         authorRole: role,
+        authorId: user.id,
       };
 
       const res = await fetch(`${API_URL}/api/forum-posts`, {
@@ -121,7 +122,7 @@ export default function CreateForumPostPage() {
         alert(data.message || "Failed to create post");
         return;
       }
-
+      
       alert("Forum post created successfully!");
       router.push("/forum");
     } catch (error) {
