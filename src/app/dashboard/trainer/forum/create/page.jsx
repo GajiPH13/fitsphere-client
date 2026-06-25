@@ -1,6 +1,6 @@
 import React from 'react';
 import PostForumForm from '@/components/dashboard/PostForumForm';
-const TrainerForumPostCreatePage = () => {
+const TrainerForumFormPage = () => {
     return (
         <div>
             <PostForumForm />
@@ -8,4 +8,4 @@ const TrainerForumPostCreatePage = () => {
     );
 };
 
-export default TrainerForumPostCreatePage;
+export default TrainerForumFormPage;

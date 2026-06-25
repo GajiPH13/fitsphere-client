@@ -1,11 +1,11 @@
 import React from 'react';
 import PostForumForm from '@/components/dashboard/PostForumForm';
-const TrainerForumPostCreatePage = () => {
+const AdminPostCreatePage = () => {
     return (
-        <div>
+        <div className=''>
             <PostForumForm />
         </div>
     );
 };
 
-export default TrainerForumPostCreatePage;
+export default AdminPostCreatePage;

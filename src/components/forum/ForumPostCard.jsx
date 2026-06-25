@@ -88,9 +88,11 @@ export default function ForumPostCard({ post }) {
 
         {/* CTA */}
         <Link
+          type="button"
           href={`/forum/${post._id}`}
           className="
             mt-6
+            outline
             inline-flex
             w-full
             items-center
@@ -100,7 +102,7 @@ export default function ForumPostCard({ post }) {
             px-5
             py-3
             font-semibold
-            text-white
+            text-[#2F3A2F]
             transition
             hover:brightness-110
           "
