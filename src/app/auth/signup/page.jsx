@@ -15,14 +15,15 @@ import {
 import { Check } from "@gravity-ui/icons";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function SignupForm() {
   const [role, setRole] = useState("member");
   const [imageUrl, setImageUrl] = useState("");
-   const router = useRouter();
+  const router = useRouter();
   const onSubmit = async (e) => {
     e.preventDefault();
-   
+
     const formData = new FormData(e.currentTarget);
     const data = {};
 
@@ -36,14 +37,14 @@ export default function SignupForm() {
       alert("Passwords do not match!");
       return;
     }
-    
+
     console.log("Submitting signup data:", data);
     try {
       const { data: session, error } = await authClient.signUp.email({
         email: data.email,
         password: data.password,
         name: data.name,
-        image: data.imageUrl || undefined,
+        image: imageUrl || undefined,
         role: data.role,
         plan: "free",
         // autoSignIn: false,
@@ -68,10 +69,8 @@ export default function SignupForm() {
   return (
     /* Perfectly centered container on the screen */
     <div className="min-h-screen w-full bg-[#EDF3E7] flex items-center justify-center p-4 md:p-6 selection:bg-[#6B8E23]/30">
-      
       {/* Medium sized (max-w-4xl) side-by-side glassmorphic card */}
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 rounded-[32px] overflow-hidden shadow-2xl border border-white/40 bg-white/40 backdrop-blur-xl">
-        
         {/* LEFT COLUMN: Main Form Inputs */}
         <div className="p-8 lg:p-10 flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/30">
           <div className="mb-6">
@@ -83,7 +82,11 @@ export default function SignupForm() {
             </p>
           </div>
 
-          <Form id="signup-form" className="flex flex-col gap-4" onSubmit={onSubmit}>
+          <Form
+            id="signup-form"
+            className="flex flex-col gap-4"
+            onSubmit={onSubmit}
+          >
             {/* Full Name */}
             <TextField
               isRequired
@@ -92,7 +95,9 @@ export default function SignupForm() {
                 value.length < 3 ? "Name must be at least 3 characters" : null
               }
             >
-              <Label className="text-xs font-semibold text-[#2F3A2F]">Full Name</Label>
+              <Label className="text-xs font-semibold text-[#2F3A2F]">
+                Full Name
+              </Label>
               <Input placeholder="John Doe" className="mt-1 h-11" />
               <FieldError className="text-xs text-red-500 mt-0.5" />
             </TextField>
@@ -109,7 +114,9 @@ export default function SignupForm() {
                 return null;
               }}
             >
-              <Label className="text-xs font-semibold text-[#2F3A2F]">Email Address</Label>
+              <Label className="text-xs font-semibold text-[#2F3A2F]">
+                Email Address
+              </Label>
               <Input placeholder="john@example.com" className="mt-1 h-11" />
               <FieldError className="text-xs text-red-500 mt-0.5" />
             </TextField>
@@ -126,7 +133,9 @@ export default function SignupForm() {
                 return null;
               }}
             >
-              <Label className="text-xs font-semibold text-[#2F3A2F]">Password</Label>
+              <Label className="text-xs font-semibold text-[#2F3A2F]">
+                Password
+              </Label>
               <Input placeholder="Enter password" className="mt-1 h-11" />
               <Description className="text-[11px] text-[#5D6B57]/70 mt-0.5">
                 8+ chars, 1 uppercase, 1 number
@@ -136,7 +145,9 @@ export default function SignupForm() {
 
             {/* Confirm Password */}
             <TextField isRequired name="confirmPassword" type="password">
-              <Label className="text-xs font-semibold text-[#2F3A2F]">Confirm Password</Label>
+              <Label className="text-xs font-semibold text-[#2F3A2F]">
+                Confirm Password
+              </Label>
               <Input placeholder="Re-enter password" className="mt-1 h-11" />
               <FieldError className="text-xs text-red-500 mt-0.5" />
             </TextField>
@@ -145,11 +156,12 @@ export default function SignupForm() {
 
         {/* RIGHT COLUMN: Profile details, terms, and Actions */}
         <div className="p-8 lg:p-10 flex flex-col justify-between bg-white/20 backdrop-blur-md">
-          
           <div className="flex flex-col gap-5">
             {/* Role Selector */}
             <div className="space-y-2">
-              <span className="text-xs font-semibold text-[#2F3A2F] block">Select Role</span>
+              <span className="text-xs font-semibold text-[#2F3A2F] block">
+                Select Role
+              </span>
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
@@ -185,33 +197,55 @@ export default function SignupForm() {
 
             {/* Profile Picture and Image URL Input */}
             <div className="space-y-2">
-              <TextField name="imageUrl" value={imageUrl} onChange={setImageUrl}>
+              <TextField
+                name="imageUrl"
+                value={imageUrl}
+                onChange={setImageUrl}
+              >
                 {/* Visual Label linked correctly inside the component wrapper */}
-                <Label className="text-xs font-semibold text-[#2F3A2F]">Profile Image URL</Label>
-                <Input placeholder="Select an image if or profile Image URL" className="h-11 mt-1" />
+                <Label className="text-xs font-semibold text-[#2F3A2F]">
+                  Profile Image URL
+                </Label>
+                <Input
+                  placeholder="Select an image if or profile Image URL"
+                  className="h-11 mt-1"
+                />
               </TextField>
-              
+
               {/* Preview Box */}
               <div className="flex items-center gap-3 rounded-xl border border-white/40 bg-white/30 p-2 mt-2">
+                <TextField>
                 <div className="h-12 w-12 rounded-xl bg-gray-200/50 border border-white/50 overflow-hidden flex items-center justify-center flex-shrink-0">
                   {imageUrl ? (
-                    <img
+                    <Image
                       src={imageUrl}
                       alt="Avatar Preview"
-                      className="h-full w-full object-cover"
-                      onError={(e) => { e.currentTarget.style.display = "none"; }}
+                      width={96} // Change to your desired pixel size (e.g., 40, 64, 96)
+                      height={96} // Must match width for a perfect square/circle
+                      className="object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                      }}
                     />
+                    
                   ) : (
                     <div className="h-6 w-6 rounded-full bg-gray-400/40" />
                   )}
                 </div>
-                <span className="text-xs font-medium text-[#5D6B57]">Avatar Preview</span>
+                </TextField>
+                <span className="text-xs font-medium text-[#5D6B57]">
+                  Avatar Preview
+                </span>
               </div>
             </div>
-            
+
             {/* Terms and Conditions */}
             <div className="pt-2">
-              <Checkbox name="terms" isRequired className="text-xs text-[#5D6B57] font-medium">
+              <Checkbox
+                name="terms"
+                isRequired
+                className="text-xs text-[#5D6B57] font-medium"
+              >
                 I agree to Terms & Privacy Policy
               </Checkbox>
             </div>
@@ -231,28 +265,32 @@ export default function SignupForm() {
             {/* Divider */}
             <div className="relative my-1 flex items-center w-full">
               <div className="flex-grow border-t border-gray-300/50"></div>
-              <span className="mx-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider">OR</span>
+              <span className="mx-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                OR
+              </span>
               <div className="flex-grow border-t border-gray-300/50"></div>
             </div>
 
             {/* Google Signup Button */}
-            <Button 
-              variant="secondary" 
+            <Button
+              variant="secondary"
               aria-label="Sign up with Google"
               className="h-12 w-full rounded-xl border border-gray-300/70 bg-white/60 hover:bg-white/90 transition-all font-semibold text-sm text-[#2F3A2F]"
             >
               Sign up with Google
             </Button>
-            
+
             {/* Login Navigation Link */}
             <p className="text-center text-xs text-[#5D6B57] w-full mt-1">
               Already have an account?{" "}
-              <Link href="/login" className="font-bold text-[#6B8E23] hover:underline ml-1">
+              <Link
+                href="/login"
+                className="font-bold text-[#6B8E23] hover:underline ml-1"
+              >
                 Log In
               </Link>
             </p>
           </div>
-
         </div>
       </div>
     </div>

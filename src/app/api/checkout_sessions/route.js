@@ -67,6 +67,7 @@ export async function POST(req) {
         priceId: selectedPlan.priceId,
         user_id: user.id,
         user_email: user.email,
+        // user_image: user.image,
         user_role: userRole,
       },
       subscription_data: {
@@ -75,6 +76,7 @@ export async function POST(req) {
           priceId: selectedPlan.priceId,
           user_id: user.id,
           user_email: user.email,
+          // user_image: user.image,
           user_role: userRole,
         },
       },
