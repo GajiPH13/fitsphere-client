@@ -43,7 +43,7 @@ export function DashboardSideBar({ role = "member", mobileOnly = false }) {
     admin: [
       { icon: House, href: "/dashboard/admin", label: "Dashboard" },
       { icon: Persons, href: "/dashboard/admin/users", label: "Users" },
-      { icon: LayoutList, href: "/dashboard/admin/trainers", label: "Trainer Requests" },
+      { icon: LayoutList, href: "/dashboard/admin/trainer-applications", label: "Trainer Requests" },
       { icon: LayoutList, href: "/dashboard/admin/classes", label: "Classes" },
       { icon: BookOpen, href: "/dashboard/admin/forum", label: "Forum" },
       { icon: Shield, href: "/dashboard/admin/reports", label: "Reports" },

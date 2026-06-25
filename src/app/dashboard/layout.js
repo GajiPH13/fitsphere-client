@@ -38,7 +38,7 @@ export default function DashboardLayout({ children }) {
       {/* Main Panel Content Area */}
       <main
         className="
-          mt-20 flex-1 mx-4 p-6
+          mt-20 flex-1  p-6
           bg-white/20
           backdrop-blur-lg
           border border-[#c4d3b5]/30
