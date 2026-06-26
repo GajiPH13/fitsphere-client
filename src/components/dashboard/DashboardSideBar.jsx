@@ -1,18 +1,17 @@
 import {
   LayoutSideContentLeft,
-  Bell,
-  Envelope,
   Gear,
   House,
   Person,
   ChartColumn,
   BookOpen,
-  Dumbbell,
   Persons,
   Shield,
   LayoutList,
-  SquareList,
-  ClipboardCheck,
+  Bookmark,
+  ListCheck,
+  Calculator,
+  
 } from "@gravity-ui/icons";
 import { Button, Drawer } from "@heroui/react";
 import Link from "next/link";
@@ -24,12 +23,11 @@ export function DashboardSideBar({ role = "member", mobileOnly = false }) {
   const navItemsByRole = {
     member: [
       { icon: House, href: "/dashboard/member", label: "Dashboard" },
-      { icon: Gear, href: "/dashboard/member/classes", label: "Classes" },
-      { icon: Bell, href: "/dashboard/member/bookings", label: "My Bookings" },
-      { icon: ChartColumn, href: "/dashboard/member/progress", label: "Progress" },
-      { icon: BookOpen, href: "/dashboard/member/forum", label: "Community" },
-      { icon: Person, href: "/dashboard/member/profile", label: "Profile" },
-      { icon: Gear, href: "/dashboard/member/settings", label: "Settings" },
+      { icon: Calculator, href: "/dashboard/member/my-bookings", label: "My Bookings" },
+      { icon: Bookmark, href: "/dashboard/member/favorite-classes", label: "Favorite Classes" },
+      { icon: ListCheck, href: "/dashboard/member/subscriptions", label: "Subscriptions" },
+      { icon: Person, href: "/dashboard/member/apply-trainer", label: "Apply as Trainer" },
+      
     ],
     trainer: [
       { icon: House, href: "/dashboard/trainer", label: "Dashboard" },
