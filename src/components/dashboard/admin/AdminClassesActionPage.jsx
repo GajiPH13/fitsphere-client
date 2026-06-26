@@ -57,6 +57,10 @@ export default function AdminClassesPage() {
     try {
       const res = await fetch(`${API_URL}/api/classes/${classId}`, {
         method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "x-user-id": user.id,
+          },
       });
 
       const data = await res.json();
@@ -75,7 +79,6 @@ export default function AdminClassesPage() {
     }
   };
 
-
   useEffect(() => {
     const fetchClasses = async () => {
       if (isPending) return;
@@ -93,7 +96,16 @@ export default function AdminClassesPage() {
       try {
         setLoading(true);
 
-        const res = await fetch(`${API_URL}/api/admin/classes`);
+        // const res = await fetch(`${API_URL}/api/admin/classes`);
+        const res = await fetch(`${API_URL}/api/admin/classes`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user-id": user.id,
+          },
+        });
+
+       
 
         if (!res.ok) {
           throw new Error("Failed to fetch classes");

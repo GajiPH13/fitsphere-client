@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -14,6 +13,7 @@ export default function AdminUsersPage() {
 
   const user = session?.user;
   const role = user?.role;
+  // const userId = user?.id;
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,8 +37,15 @@ export default function AdminUsersPage() {
       try {
         setLoading(true);
 
-        const res = await fetch(`${API_URL}/api/users`);
+        // const res = await fetch(`${API_URL}/api/users`);
+        const res = await fetch(`${API_URL}/api/users`, {
+          headers: {
+            "x-user-id": user.id,
+          },
+        });
 
+       
+        
         if (!res.ok) {
           throw new Error("Failed to fetch users");
         }
@@ -61,7 +68,7 @@ export default function AdminUsersPage() {
     const confirmAction = window.confirm(
       `Are you sure you want to ${
         nextStatus === "blocked" ? "block" : "unblock"
-      } this user?`
+      } this user?`,
     );
 
     if (!confirmAction) return;
@@ -73,6 +80,7 @@ export default function AdminUsersPage() {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          "x-user-id": user.id,
         },
         body: JSON.stringify({
           status: nextStatus,
@@ -88,10 +96,8 @@ export default function AdminUsersPage() {
 
       setUsers((prev) =>
         prev.map((item) =>
-          item._id === targetUser._id
-            ? { ...item, status: nextStatus }
-            : item
-        )
+          item._id === targetUser._id ? { ...item, status: nextStatus } : item,
+        ),
       );
 
       alert(data.message);
@@ -105,7 +111,7 @@ export default function AdminUsersPage() {
 
   const handleRoleChange = async (targetUser, newRole) => {
     const confirmAction = window.confirm(
-      `Are you sure you want to change this user's role to ${newRole}?`
+      `Are you sure you want to change this user's role to ${newRole}?`,
     );
 
     if (!confirmAction) return;
@@ -132,8 +138,8 @@ export default function AdminUsersPage() {
 
       setUsers((prev) =>
         prev.map((item) =>
-          item._id === targetUser._id ? { ...item, role: newRole } : item
-        )
+          item._id === targetUser._id ? { ...item, role: newRole } : item,
+        ),
       );
 
       alert(data.message);
@@ -160,7 +166,9 @@ export default function AdminUsersPage() {
       <main className="flex min-h-screen items-center justify-center bg-[#EDF3E7] px-6 py-20">
         <section className="max-w-md w-full rounded-[32px] border border-white/40 bg-white/30 p-8 text-center shadow-2xl backdrop-blur-xl">
           <h1 className="text-3xl font-black text-[#2F3A2F]">Access Denied</h1>
-          <p className="mt-3 font-medium text-[#5D6B57]">Only admins can manage users.</p>
+          <p className="mt-3 font-medium text-[#5D6B57]">
+            Only admins can manage users.
+          </p>
         </section>
       </main>
     );
@@ -183,7 +191,6 @@ export default function AdminUsersPage() {
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-white/20 rounded-full blur-3xl pointer-events-none" />
 
       <section className="relative z-10 mx-auto max-w-7xl rounded-[32px] border border-white/40 bg-white/20 p-6 sm:p-10 shadow-[0_8px_32px_0_rgba(0,0,0,0.04)] backdrop-blur-xl">
-        
         {/* Header Block */}
         <div className="mb-8 border-b border-white/20 pb-6">
           <span className="text-xs font-bold uppercase tracking-widest text-[#5D6B57] bg-white/30 px-3 py-1 rounded-full backdrop-blur-sm">
@@ -193,31 +200,48 @@ export default function AdminUsersPage() {
             User Management
           </h1>
           <p className="mt-2 text-sm sm:text-base text-[#5D6B57]/90 font-medium">
-            View active accounts, block/unblock validations, and reassign system roles instantly.
+            View active accounts, block/unblock validations, and reassign system
+            roles instantly.
           </p>
         </div>
 
         {/* HeroUI Table Container */}
         <div className="overflow-hidden rounded-2xl border border-white/30 bg-white/10 shadow-inner backdrop-blur-md">
-          <Table className="text-[#2F3A2F] bg-transparent shadow-none" style={{ background: "transparent" }}>
+          <Table
+            className="text-[#2F3A2F] bg-transparent shadow-none"
+            style={{ background: "transparent" }}
+          >
             <Table.ScrollContainer>
               <Table.Content aria-label="User Management Table">
                 <Table.Header className="bg-white/15 border-b border-white/30">
                   {/* ADDED isRowHeader TO COMPLY WITH ACCESSIBILITY ERROR REQUIREMENTS */}
                   <Table.Column allowsSorting isRowHeader>
                     {({ sortDirection }) => (
-                      <Table.SortableColumnHeader sortDirection={sortDirection} className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4">
+                      <Table.SortableColumnHeader
+                        sortDirection={sortDirection}
+                        className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4"
+                      >
                         User / ID
                       </Table.SortableColumnHeader>
                     )}
                   </Table.Column>
-                  <Table.Column className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4">Email</Table.Column>
-                  <Table.Column className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4">System Role</Table.Column>
-                  <Table.Column className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4">Current Plan</Table.Column>
-                  <Table.Column className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4">Status</Table.Column>
-                  <Table.Column className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4 text-right">Management Actions</Table.Column>
+                  <Table.Column className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4">
+                    Email
+                  </Table.Column>
+                  <Table.Column className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4">
+                    System Role
+                  </Table.Column>
+                  <Table.Column className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4">
+                    Current Plan
+                  </Table.Column>
+                  <Table.Column className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4">
+                    Status
+                  </Table.Column>
+                  <Table.Column className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4 text-right">
+                    Management Actions
+                  </Table.Column>
                 </Table.Header>
-                
+
                 <Table.Body>
                   {users.map((item) => {
                     const status = item.status || "active";
@@ -225,10 +249,12 @@ export default function AdminUsersPage() {
                     const isActionLoading = actionLoadingId === item._id;
 
                     return (
-                      <Table.Row 
-                        key={item._id} 
+                      <Table.Row
+                        key={item._id}
                         className={`border-b border-white/15 last:border-0 transition-all duration-200 hover:bg-white/5 ${
-                          isActionLoading ? "opacity-50 pointer-events-none" : ""
+                          isActionLoading
+                            ? "opacity-50 pointer-events-none"
+                            : ""
                         }`}
                       >
                         {/* User / ID Cell */}
@@ -236,12 +262,16 @@ export default function AdminUsersPage() {
                           <p className="font-bold text-base text-[#2F3A2F] truncate">
                             {item.name || "Unnamed User"}
                           </p>
-                          <p className="text-[10px] font-mono text-[#5D6B57]/80 truncate mt-0.5">ID: {item._id}</p>
+                          <p className="text-[10px] font-mono text-[#5D6B57]/80 truncate mt-0.5">
+                            ID: {item._id}
+                          </p>
                         </Table.Cell>
 
                         {/* Email Cell */}
                         <Table.Cell className="p-4">
-                          <p className="text-sm font-medium text-[#4B5A42] truncate">{item.email}</p>
+                          <p className="text-sm font-medium text-[#4B5A42] truncate">
+                            {item.email}
+                          </p>
                         </Table.Cell>
 
                         {/* System Role Cell */}
@@ -279,12 +309,14 @@ export default function AdminUsersPage() {
                               disabled={isActionLoading}
                               onClick={() => handleBlockToggle(item)}
                               className={`rounded-xl px-4 py-2 text-xs font-bold tracking-wide text-white transition-all shadow-sm active:scale-[0.97] disabled:opacity-40 ${
-                                status === "blocked" 
-                                  ? "bg-[#6B8E23] hover:bg-[#6B8E23]/90" 
+                                status === "blocked"
+                                  ? "bg-[#6B8E23] hover:bg-[#6B8E23]/90"
                                   : "bg-red-600 hover:bg-red-700"
                               }`}
                             >
-                              {status === "blocked" ? "Unblock Account" : "Block Account"}
+                              {status === "blocked"
+                                ? "Unblock Account"
+                                : "Block Account"}
                             </button>
 
                             {itemRole !== "admin" && (
@@ -325,7 +357,6 @@ export default function AdminUsersPage() {
             </Table.Footer>
           </Table>
         </div>
-
       </section>
     </main>
   );

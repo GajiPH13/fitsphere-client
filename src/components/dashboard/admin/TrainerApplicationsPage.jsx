@@ -13,6 +13,7 @@ export default function TrainerApplicationsPage() {
 
   const user = session?.user;
   const role = user?.role;
+  // const applicationId = user?.applicationId;
 
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,7 +25,7 @@ export default function TrainerApplicationsPage() {
       if (isPending) return;
 
       if (!user) {
-        router.push("/auth/signin");
+        router.replace("/auth/signin");
         return;
       }
 
@@ -36,7 +37,13 @@ export default function TrainerApplicationsPage() {
       try {
         setLoading(true);
 
-        const res = await fetch(`${API_URL}/api/trainer-applications`);
+        // const res = await fetch(`${API_URL}/api/trainer-applications`);
+        const res = await fetch(`${API_URL}/api/trainer-applications`, {
+          headers: {
+            "Content-Type": "application/json",
+            "x-user-id": user.id,
+          },
+        });
 
         if (!res.ok) {
           throw new Error("Failed to fetch trainer applications");
@@ -56,7 +63,7 @@ export default function TrainerApplicationsPage() {
 
   const handleStatusUpdate = async (application, status) => {
     const confirmAction = window.confirm(
-      `Are you sure you want to ${status} this application?`
+      `Are you sure you want to ${status} this application?`,
     );
 
     if (!confirmAction) return;
@@ -70,12 +77,13 @@ export default function TrainerApplicationsPage() {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            "x-user-id": user.id,
           },
           body: JSON.stringify({
             status,
             userId: application.userId,
           }),
-        }
+        },
       );
 
       const data = await res.json();
@@ -89,8 +97,8 @@ export default function TrainerApplicationsPage() {
         prev.map((item) =>
           item._id === application._id
             ? { ...item, status, updatedAt: new Date().toISOString() }
-            : item
-        )
+            : item,
+        ),
       );
 
       alert(data.message || "Application updated successfully");
@@ -191,8 +199,8 @@ export default function TrainerApplicationsPage() {
                           application.status === "pending"
                             ? "bg-yellow-100 text-yellow-700"
                             : application.status === "approved"
-                            ? "bg-green-100 text-green-700"
-                            : "bg-red-100 text-red-700"
+                              ? "bg-green-100 text-green-700"
+                              : "bg-red-100 text-red-700"
                         }`}
                       >
                         {application.status}

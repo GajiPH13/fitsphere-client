@@ -14,10 +14,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 
 export default function DashboardNavBar() {
+  const {data: session, isPending: loading} = authClient.useSession();
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [session, setSession] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // const [session, setSession] = useState(null);
+  // const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
   const pathname = usePathname();
@@ -31,21 +32,21 @@ export default function DashboardNavBar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    async function fetchSession() {
-      try {
-        const res = await authClient.getSession();
-        setSession(res?.data?.session ? res.data : null);
-      } catch (err) {
-        console.error("Failed to load session:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
+  // useEffect(() => {
+  //   async function fetchSession() {
+  //     try {
+  //       const res = await authClient.getSession();
+  //       setSession(res?.data?.session ? res.data : null);
+  //     } catch (err) {
+  //       console.error("Failed to load session:", err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
 
-    fetchSession();
-  }, [pathname]);
-
+  //   fetchSession();
+  // }, [pathname]);
+ 
   const handleSearch = (e) => {
     e.preventDefault();
 
@@ -57,17 +58,17 @@ export default function DashboardNavBar() {
 
     setIsOpen(false);
   };
-
+// sign out function
   const handleSignOut = async () => {
-    try {
-      await authClient.signOut();
-      setSession(null);
-      setIsOpen(false);
-      router.push("/");
-    } catch (err) {
-      console.error("Error signing out:", err);
-    }
-  };
+  try {
+    await authClient.signOut();
+    setIsOpen(false);
+    router.refresh();
+    router.push("/auth/signin");
+  } catch (err) {
+    console.error("Error signing out:", err);
+  }
+};
 
   return (
     <>
@@ -174,7 +175,7 @@ export default function DashboardNavBar() {
                     </span>
                   </div>
                 </div>
-
+{/* sign out button */}
                 <button
                   type="button"
                   onClick={handleSignOut}

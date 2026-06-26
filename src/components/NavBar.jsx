@@ -11,9 +11,9 @@ export default function NavBar() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("Home");
   const [isOpen, setIsOpen] = useState(false);
-  const [session, setSession] = useState(null);
-  const [loading, setLoading] = useState(true);
-
+  // const [session, setSession] = useState(null);
+  // const [loading, setLoading] = useState(true);
+const { data: session, isPending:loading } = authClient.useSession();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -34,33 +34,34 @@ export default function NavBar() {
   }, []);
 
   // Fetch better-auth session data safely inside Client Component
-  useEffect(() => {
-    async function fetchSession() {
-      try {
-        const res = await authClient.getSession();
-        if (res && res.data) {
-          setSession(res.data.session ? res.data : null);
-        }
-      } catch (err) {
-        console.error("Failed to load session:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchSession();
-  }, [pathname]);
+  
+  // useEffect(() => {
+  //   async function fetchSession() {
+  //     try {
+  //       const res = await authClient.getSession();
+  //       if (res && res.data) {
+  //         setSession(res.data.session ? res.data : null);
+  //       }
+  //     } catch (err) {
+  //       console.error("Failed to load session:", err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+  //   fetchSession();
+  // }, [pathname]);
 
   // Better Auth Sign Out Handler
   const handleSignOut = async () => {
-    try {
-      await authClient.signOut();
-      setSession(null);
-      setIsOpen(false);
-      router.push("/");
-    } catch (err) {
-      console.error("Error signing out:", err);
-    }
-  };
+  try {
+    await authClient.signOut();
+    setIsOpen(false);
+    router.refresh();
+    router.push("/auth/signin");
+  } catch (err) {
+    console.error("Error signing out:", err);
+  }
+};
 
   // Use usePathname to determine the current path and conditionally render NavBar
     const pathName = usePathname();
