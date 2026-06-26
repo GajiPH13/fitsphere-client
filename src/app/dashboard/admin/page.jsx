@@ -1,9 +1,9 @@
 import React from 'react';
-
+import AdminDashboardPreviewPage from '@/components/dashboard/admin/AdminDashboardPreviewPage';
 const AdminDashboard = () => {
     return (
         <div>
-            <h1>Admin Dashboard</h1>
+            <AdminDashboardPreviewPage/>
         </div>
     );
 };

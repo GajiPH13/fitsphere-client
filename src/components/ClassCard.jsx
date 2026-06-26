@@ -324,7 +324,7 @@ export default function ClassCard({ item }) {
 
         <Link
           href={detailsLink}
-          className="mt-6 block text-center w-full py-4 rounded-full !bg-[#6B8E23] text-white text-lg font-semibold shadow-lg transition hover:brightness-110"
+          className="mt-6 block text-center w-full py-3 rounded-full !bg-[#6B8E23] text-white text-lg font-semibold shadow-lg transition hover:brightness-110"
         >
           View Details
         </Link>

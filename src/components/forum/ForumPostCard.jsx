@@ -69,9 +69,7 @@ export default function ForumPostCard({ post }) {
         </h2>
 
         {/* Author */}
-        <p className="mt-2 text-sm text-[#5D6B57]">
-          By {post.authorName}
-        </p>
+        <p className="mt-2 text-sm text-[#5D6B57]">By {post.authorName}</p>
 
         {/* Description */}
         <p
@@ -88,24 +86,26 @@ export default function ForumPostCard({ post }) {
 
         {/* CTA */}
         <Link
-          type="button"
+        type="button"
           href={`/forum/${post._id}`}
           className="
-            mt-6
-            outline
-            inline-flex
-            w-full
-            items-center
-            justify-center
-            rounded-full
-            bg-[#6B8E23]
-            px-5
-            py-3
-            font-semibold
-            text-[#2F3A2F]
-            transition
-            hover:brightness-110
-          "
+    mt-6
+    inline-flex
+    w-full
+    items-center
+    justify-center
+    rounded-full
+    !bg-[#6B8E23]
+    px-5
+    py-3
+    font-semibold
+    !text-white
+    shadow-lg
+    transition-all
+    duration-300
+    hover:bg-[#5A7A1E]
+    hover:shadow-xl
+  "
         >
           Read More →
         </Link>

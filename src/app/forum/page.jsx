@@ -23,7 +23,12 @@ export default function ForumPage() {
         }
 
         const data = await res.json();
-        setPosts(data);
+
+        if (data.success) {
+          setPosts(data.posts);
+        } else {
+          setPosts([]);
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -34,11 +39,13 @@ export default function ForumPage() {
     fetchPosts();
   }, [API_URL]);
 
-  const filteredPosts = posts.filter((post) =>
-    `${post.title || ""} ${post.authorName || ""} ${post.category || ""}`
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase())
-  );
+  const filteredPosts = Array.isArray(posts)
+    ? posts.filter((post) =>
+        `${post.title || ""} ${post.authorName || ""} ${post.category || ""}`
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()),
+      )
+    : [];
 
   if (error) {
     return <p className="p-10 text-center text-red-500">{error}</p>;
@@ -48,9 +55,7 @@ export default function ForumPage() {
     <section className="min-h-screen bg-[#EDF3E7] px-6 py-20 md:px-16 lg:px-24">
       <div className="mx-auto max-w-7xl">
         <div className="mb-12 text-center">
-          <h1 className="text-5xl font-bold text-[#2F3A2F]">
-            Community Forum
-          </h1>
+          <h1 className="text-5xl font-bold text-[#2F3A2F]">Community Forum</h1>
           <p className="mt-3 text-[#5D6B57]">
             Fitness knowledge, tips, and updates from trainers and admins.
           </p>

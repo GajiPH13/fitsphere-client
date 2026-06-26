@@ -1,0 +1,345 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import {
+  PersonFill,
+  ArrowRightToSquare,
+  Bars,
+  Xmark,
+  Magnifier,
+} from "@gravity-ui/icons";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+
+export default function DashboardNavBar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const dashboardHref = `/dashboard/${session?.user?.role || "member"}`;
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    async function fetchSession() {
+      try {
+        const res = await authClient.getSession();
+        setSession(res?.data?.session ? res.data : null);
+      } catch (err) {
+        console.error("Failed to load session:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchSession();
+  }, [pathname]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    if (!searchQuery.trim()) return;
+
+    router.push(
+      `${dashboardHref}?search=${encodeURIComponent(searchQuery.trim())}`
+    );
+
+    setIsOpen(false);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await authClient.signOut();
+      setSession(null);
+      setIsOpen(false);
+      router.push("/");
+    } catch (err) {
+      console.error("Error signing out:", err);
+    }
+  };
+
+  return (
+    <>
+      <header
+        className={
+          "fixed top-0 left-1/2 z-50 w-full -translate-x-1/2 border-b border-[#d7dfc6]/60 px-4 transition-all duration-300 md:px-20 " +
+          (scrolled
+            ? "bg-[#f4f6ee]/90 py-1 shadow-md"
+            : "bg-[#f4f6ee]/70 py-2")
+        }
+        style={{
+          backdropFilter: "blur(18px)",
+          WebkitBackdropFilter: "blur(18px)",
+        }}
+      >
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-2 py-2 md:px-6">
+          <button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            aria-label="Open Dashboard Drawer"
+            className="flex rounded-lg p-2 text-[#2f3a2f] transition hover:bg-black/5 md:hidden"
+          >
+            <Bars size={20} />
+          </button>
+
+          <Link
+            href="/"
+            className="flex cursor-pointer items-center gap-2.5 text-lg font-bold text-[#2f3a2f]"
+          >
+            <svg
+              className="h-10 w-10"
+              viewBox="0 0 200 200"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="100"
+                cy="100"
+                r="85"
+                stroke="#2F3A2F"
+                strokeWidth="10"
+                strokeDasharray="440 100"
+                strokeLinecap="round"
+              />
+              <path
+                d="M50 95 C70 75, 130 75, 150 95 C130 82, 70 82, 50 95 Z"
+                fill="#A3B18A"
+              />
+              <circle cx="100" cy="65" r="12" fill="#2F3A2F" />
+              <path
+                d="M100 82 C106 95, 114 115, 125 145 C112 138, 103 125, 100 110 C97 125, 88 138, 75 145 C86 115, 94 95, 100 82 Z"
+                fill="#2F3A2F"
+              />
+              <circle cx="100" cy="102" r="7" fill="#A3B18A" />
+            </svg>
+            <span className="tracking-tight">FitSphere</span>
+          </Link>
+
+          <form
+            onSubmit={handleSearch}
+            className="mx-8 hidden flex-1 justify-center md:flex"
+          >
+            <div className="relative w-full max-w-xl">
+              <Magnifier
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-[#5D6B57]"
+              />
+
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search dashboard..."
+                className="h-11 w-full rounded-full border border-[#d7dfc6]/70 bg-white/60 pl-12 pr-5 text-sm font-medium text-[#2f3a2f] outline-none backdrop-blur-xl transition focus:border-[#6B8E23] focus:bg-white/80 focus:ring-2 focus:ring-[#6B8E23]/20"
+              />
+            </div>
+          </form>
+
+          <div className="hidden items-center gap-3 md:flex">
+            {!loading && session ? (
+              <>
+                <div className="flex items-center gap-2 border-r border-[#d7dfc6]/60 pr-2">
+                  <div className="relative h-8 w-8 overflow-hidden rounded-full border border-[#6B8E23] bg-white">
+                    {session.user?.image ? (
+                      <Image
+                        src={session.user.image}
+                        alt={session.user.name || "User Avatar"}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-gray-200 text-[#2f3a2f]">
+                        <PersonFill size={14} />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex max-w-[130px] flex-col">
+                    <span className="truncate text-xs font-semibold text-[#2f3a2f]">
+                      {session.user?.name}
+                    </span>
+                    <span className="truncate text-[10px] font-medium uppercase text-[#6B8E23]">
+                      {session.user?.role}
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="flex items-center gap-2 rounded-full border border-red-200 bg-white/50 px-4 py-2 text-sm font-medium text-red-700 shadow-sm transition hover:bg-red-50"
+                >
+                  Log Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/auth/signin"
+                  className="flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium text-[#2f3a2f] shadow-sm transition hover:bg-black/5 active:scale-95"
+                >
+                  <PersonFill size={15} />
+                  Login
+                </Link>
+
+                <Link
+                  href="/auth/signup"
+                  className="flex items-center gap-2 rounded-full bg-[#6B8E23] px-5 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-[#5A7A1E] active:scale-95"
+                >
+                  <ArrowRightToSquare size={14} />
+                  Join Now
+                </Link>
+              </>
+            )}
+          </div>
+
+          <div className="h-8 w-8 md:hidden" />
+        </div>
+      </header>
+
+      <div
+        className={`fixed inset-0 z-50 transition-opacity duration-300 md:hidden ${
+          isOpen
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0"
+        }`}
+      >
+        <div
+          className="absolute inset-0 bg-[#2f3a2f]/40 backdrop-blur-sm"
+          onClick={() => setIsOpen(false)}
+        />
+
+        <div
+          className={`absolute bottom-0 left-0 top-0 flex w-72 max-w-[80vw] flex-col justify-between border-r border-white/40 bg-[#f4f6ee] p-6 shadow-2xl transition-transform duration-300 ease-in-out ${
+            isOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <div>
+            <div className="mb-6 flex items-center justify-between border-b border-[#d7dfc6]/60 pb-4">
+              <span className="font-bold text-[#2f3a2f]">FitSphere</span>
+
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="rounded-full p-1.5 text-[#4b5a4b] hover:bg-black/5"
+                aria-label="Close Dashboard Drawer"
+              >
+                <Xmark size={18} />
+              </button>
+            </div>
+
+            {!loading && session && (
+              <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-[#d7dfc6]/40 bg-white/50 p-3">
+                <div className="flex items-center gap-3">
+                  <div className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-[#6B8E23]">
+                    {session.user?.image ? (
+                      <Image
+                        src={session.user.image}
+                        alt="User Profile"
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-gray-200 text-[#2f3a2f]">
+                        <PersonFill size={16} />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex min-w-0 flex-col">
+                    <span className="truncate text-sm font-bold text-[#2f3a2f]">
+                      {session.user?.name}
+                    </span>
+                    <span className="truncate text-xs text-[#5D6B57]">
+                      {session.user?.email}
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="flex h-10 w-full items-center justify-center gap-1.5 rounded-xl border border-red-200 bg-red-50 text-xs font-semibold text-red-700 transition active:scale-95"
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
+
+            <form onSubmit={handleSearch} className="mb-5">
+              <div className="relative">
+                <Magnifier
+                  size={17}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-[#5D6B57]"
+                />
+
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search dashboard..."
+                  className="h-11 w-full rounded-xl border border-[#d7dfc6]/70 bg-white/70 pl-11 pr-4 text-sm text-[#2f3a2f] outline-none focus:border-[#6B8E23]"
+                />
+              </div>
+            </form>
+
+            <nav className="flex flex-col gap-1">
+              <Link
+                href={dashboardHref}
+                onClick={() => setIsOpen(false)}
+                className={`w-full rounded-xl px-4 py-3 text-left text-sm font-medium transition-all ${
+                  pathname === dashboardHref
+                    ? "bg-[#6B8E23] text-white shadow-md shadow-[#6B8E23]/10"
+                    : "text-[#4b5a4b] hover:bg-black/5 hover:text-[#2f3a2f]"
+                }`}
+              >
+                Dashboard Home
+              </Link>
+
+              <Link
+                href="/"
+                onClick={() => setIsOpen(false)}
+                className="w-full rounded-xl px-4 py-3 text-left text-sm font-medium text-[#4b5a4b] transition-all hover:bg-black/5 hover:text-[#2f3a2f]"
+              >
+                Back to Website
+              </Link>
+            </nav>
+          </div>
+
+          {!session && !loading && (
+            <div className="flex flex-col gap-2 border-t border-[#d7dfc6]/60 pt-4">
+              <Link
+                href="/auth/signin"
+                onClick={() => setIsOpen(false)}
+                className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-[#a3b18a]/60 bg-white/60 text-sm font-semibold text-[#2f3a2f]"
+              >
+                <PersonFill size={16} />
+                Login
+              </Link>
+
+              <Link
+                href="/auth/signup"
+                onClick={() => setIsOpen(false)}
+                className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#6B8E23] text-sm font-semibold text-white shadow-sm"
+              >
+                <ArrowRightToSquare size={14} />
+                Join Now
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}

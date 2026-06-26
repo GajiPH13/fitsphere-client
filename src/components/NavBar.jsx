@@ -62,6 +62,12 @@ export default function NavBar() {
     }
   };
 
+  // Use usePathname to determine the current path and conditionally render NavBar
+    const pathName = usePathname();
+    if (pathName.startsWith("/dashboard")) {
+      return null; // Don't render NavBar on dashboard pages
+    }
+
   return (
     <>
       <header

@@ -6,7 +6,6 @@ import {
   ChartColumn,
   BookOpen,
   Persons,
-  Shield,
   LayoutList,
   Bookmark,
   ListCheck,
@@ -44,8 +43,7 @@ export function DashboardSideBar({ role = "member", mobileOnly = false }) {
       { icon: LayoutList, href: "/dashboard/admin/trainer-applications", label: "Trainer Requests" },
       { icon: LayoutList, href: "/dashboard/admin/classes", label: "Classes" },
       { icon: BookOpen, href: "/dashboard/admin/forum", label: "Forum" },
-      { icon: Shield, href: "/dashboard/admin/reports", label: "Reports" },
-      { icon: Gear, href: "/dashboard/admin/settings", label: "Settings" },
+      
     ],
   };
 

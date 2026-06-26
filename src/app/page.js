@@ -1,8 +1,10 @@
 import ClassesPreview from "@/components/ClassesPreview";
-import FeaturedSection from "@/components/FeaturedSection";
+
 import HeroSection from "@/components/HeroSection";
-import PricePlan from "@/components/PricePlan";
-import Image from "next/image";
+import FitnessJourney from "@/components/home/FitnessJourney";
+import LatestForumPosts from "@/components/home/LatestForumPosts";
+import WhyChooseFitSphere from "@/components/home/WhyChooseFitSphere";
+
 
 export default function Home() {
   return (
@@ -10,7 +12,9 @@ export default function Home() {
      <HeroSection />
      {/* <FeaturedSection /> */}
      <ClassesPreview />
-     <PricePlan />
+     <FitnessJourney />
+     <LatestForumPosts />
+     <WhyChooseFitSphere />
     </div>
   );
 }
