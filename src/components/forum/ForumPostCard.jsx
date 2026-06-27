@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight } from "@gravity-ui/icons";
 
 export default function ForumPostCard({ post }) {
   return (
@@ -60,7 +61,8 @@ export default function ForumPostCard({ post }) {
           className="
             mt-4
             text-2xl
-            font-bold
+            font-(--font-plus-jakarta)
+            font-weight-bold
             text-[#2F3A2F]
             line-clamp-2
           "
@@ -86,29 +88,37 @@ export default function ForumPostCard({ post }) {
 
         {/* CTA */}
         <Link
-        type="button"
-          href={`/forum/${post._id}`}
-          className="
-    mt-6
-    inline-flex
-    w-full
-    items-center
-    justify-center
-    rounded-full
-    !bg-[#6B8E23]
-    px-5
-    py-3
-    font-semibold
-    !text-white
-    shadow-lg
-    transition-all
-    duration-300
-    hover:bg-[#5A7A1E]
-    hover:shadow-xl
-  "
-        >
-          Read More →
-        </Link>
+    href={`/forum/${post._id}`}
+    className="
+      w-full
+      group
+      inline-flex
+      h-14
+      items-center
+      justify-center
+      gap-3
+      rounded-full
+      bg-linear-to-r
+      from-[#6B8E23]
+      to-[#5A7A1E]
+      px-8
+      font-(--font-plus-jakarta)
+      font-weight-bold
+      text-white
+      shadow-xl
+      shadow-[#6B8E23]/20
+      transition-all
+      duration-300
+      hover:-translate-y-0.5
+      hover:opacity-95
+      hover:shadow-2xl
+      hover:shadow-[#6B8E23]/30
+      active:scale-[0.98]
+    "
+  >
+    Read More
+    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+  </Link>
       </div>
     </article>
   );

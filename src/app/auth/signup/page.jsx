@@ -21,6 +21,13 @@ export default function SignupForm() {
   const [role, setRole] = useState("member");
   const [imageUrl, setImageUrl] = useState("");
   const router = useRouter();
+
+  const handleGoogleAuth = async () => {
+  await authClient.signIn.social({
+    provider: "google",
+    callbackURL: "/dashboard/member",
+  });
+};
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -273,6 +280,7 @@ export default function SignupForm() {
 
             {/* Google Signup Button */}
             <Button
+            onClick={handleGoogleAuth}
               variant="secondary"
               aria-label="Sign up with Google"
               className="h-12 w-full rounded-xl border border-gray-300/70 bg-white/60 hover:bg-white/90 transition-all font-semibold text-sm text-[#2F3A2F]"

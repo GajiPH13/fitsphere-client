@@ -1,5 +1,6 @@
 
 import Link from "next/link";
+import { ArrowRight } from "@gravity-ui/icons";
 
 const steps = [
   {
@@ -57,14 +58,14 @@ export default function FitnessJourney() {
             Your Roadmap
           </span>
 
-          <h2 className="text-3xl font-black leading-[1.1] tracking-tight text-[#2F3A2F] md:text-5xl lg:text-5xl">
+          <h2 className="text-3xl font-(--font-plus-jakarta)  leading-[1.1] tracking-tight text-[#2F3A2F] md:text-5xl lg:text-5xl">
             Start Strong.<br />
             <span className="bg-linear-to-r from-[#6B8E23] to-[#3A5311] bg-clip-text text-transparent">Stay Consistent.</span><br />
             Grow Better.
           </h2>
 
-          <p className="max-w-xl text-lg font-medium leading-relaxed text-[#5D6B57]/90">
-            Whether you're just beginning your fitness journey or looking to
+          <p className="max-w-xl text-lg font-(--font-plus-jakarta) font-weight-medium leading-relaxed text-[#5D6B57]/90">
+            Whether you are just beginning your fitness journey or looking to
             reach the next level, FitSphere provides expert trainers,
             personalized classes, and a supportive community to help you stay
             motivated every day.
@@ -72,14 +73,36 @@ export default function FitnessJourney() {
 
           <div className="pt-4">
             <Link
-              href="/allclasses"
-              className="group inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-[#6B8E23] to-[#5A7A1E] px-8 py-4.5 font-bold text-white shadow-xl shadow-[#6B8E23]/20 transition-all duration-300 hover:opacity-95 hover:shadow-2xl hover:shadow-[#6B8E23]/30 hover:-translate-y-0.5 active:scale-[0.98]"
-            >
-              Explore Classes
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-4 w-4 transition-transform group-hover:translate-x-1">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
-            </Link>
+    href="/allclasses"
+    className="
+      group
+      inline-flex
+      h-14
+      items-center
+      justify-center
+      gap-3
+      rounded-full
+      bg-linear-to-r
+      from-[#6B8E23]
+      to-[#5A7A1E]
+      px-8
+      font-(--font-plus-jakarta)
+      font-weight-bold
+      text-white
+      shadow-xl
+      shadow-[#6B8E23]/20
+      transition-all
+      duration-300
+      hover:-translate-y-0.5
+      hover:opacity-95
+      hover:shadow-2xl
+      hover:shadow-[#6B8E23]/30
+      active:scale-[0.98]
+    "
+  >
+    Explore Classes
+    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+  </Link>
           </div>
         </div>
 
@@ -104,7 +127,7 @@ export default function FitnessJourney() {
                   <span className="text-xs font-bold text-[#6B8E23] uppercase tracking-wider bg-[#6B8E23]/10 px-2 py-0.5 rounded-md">
                     Phase {index + 1}
                   </span>
-                  <h3 className="text-xl font-black tracking-tight text-[#2F3A2F]">
+                  <h3 className="text-xl  font-(--font-plus-jakarta) font-weight-semibold tracking-tight text-[#2F3A2F]">
                     {step.title}
                   </h3>
                 </div>

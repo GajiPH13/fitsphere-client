@@ -40,43 +40,82 @@ export default function HeroSection() {
             </div>
 
             {/* Card Heading */}
-            <h1 className="text-3xl md:text-4xl font-black tracking-tight text-[#1C261C] leading-[1.15]">
+            <h1 className="text-3xl font-(--font-plus-jakarta) font-weight-semibold md:text-4xl  tracking-tight text-[#1C261C] leading-[1.15]">
               Ready to Transform Your{" "}
-              <span className="bg-linear-to-r from-[#3A5311] to-[#6B8E23] bg-clip-text text-transparent">
+              <span className=" bg-linear-to-r from-[#3A5311] to-[#6B8E23] bg-clip-text text-transparent">
                 Fitness Journey?
               </span>
             </h1>
             
             {/* Description Text */}
-            <p className="text-base text-[#3D4A3D] font-medium leading-relaxed">
+            <p className=" text-base font-size-2xl text-[#3D4A3D] font-(--font-plus-jakarta) font-weight-medium leading-relaxed">
               Join a global ecosystem of health enthusiasts and certified personal trainers. Choose your path below to get started immediately.
             </p>
 
             {/* Action Buttons Row */}
-            <div className="flex flex-col sm:flex-row gap-4 mt-2 justify-start">
-              {/* Primary Action Button */}
-              <Link
-                as={Link}
-                href="/allclasses"
-                size="lg"
-                className="bg-linear-to-r from-[#87A96B] to-[#76985a] hover:opacity-95 text-white font-bold shadow-xl shadow-[#87A96B]/20 transition-all duration-300 hover:-translate-y-0.5 active:scale-[0.98] px-8 h-14 rounded-2xl flex-1 sm:flex-none"
-              >
-                Explore Classes
-               
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              
-              {/* Secondary Glass Action Button */}
-              <Link
-                type="button"
-                href={trainerLink}
-                variant="bordered"
-                size="lg"
-                className="border border-white/60 hover:border-white text-[#1C261C] bg-white/40 hover:bg-white/60 font-bold shadow-sm transition-all duration-300 hover:-translate-y-0.5 active:scale-[0.98] px-8 h-14 rounded-2xl backdrop-blur-md flex-1 sm:flex-none"
-              >
-                Join as Trainer
-              </Link>
-            </div>
+            <div className="mt-6 flex flex-col items-start gap-4 sm:flex-row">
+  {/* Primary Action Button */}
+  <Link
+    href="/allclasses"
+    className="
+      group
+      inline-flex
+      h-14
+      items-center
+      justify-center
+      gap-3
+      rounded-full
+      bg-linear-to-r
+      from-[#6B8E23]
+      to-[#5A7A1E]
+      px-8
+      font-(--font-plus-jakarta)
+      font-weight-bold
+      text-white
+      shadow-xl
+      shadow-[#6B8E23]/20
+      transition-all
+      duration-300
+      hover:-translate-y-0.5
+      hover:opacity-95
+      hover:shadow-2xl
+      hover:shadow-[#6B8E23]/30
+      active:scale-[0.98]
+    "
+  >
+    Explore Classes
+    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+  </Link>
+
+  {/* Secondary Action Button */}
+  <Link
+    href={trainerLink}
+    className="
+      inline-flex
+      h-14
+      items-center
+      justify-center
+      rounded-full
+      border
+      border-white/60
+      bg-white/40
+      px-8
+      font-(--font-plus-jakarta)
+      font-weight-bold
+      text-[#1C261C]
+      shadow-sm
+      backdrop-blur-md
+      transition-all
+      duration-300
+      hover:-translate-y-0.5
+      hover:border-white
+      hover:bg-white/60
+      active:scale-[0.98]
+    "
+  >
+    Join as Trainer
+  </Link>
+</div>
 
           </div>
         </Card>

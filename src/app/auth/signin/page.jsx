@@ -16,33 +16,19 @@ import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
   const router = useRouter();
-//   const onSubmit =async (e) => {
-//     e.preventDefault();
 
-//     const formData = new FormData(e.currentTarget);
-//     const data = {};
+const handleGoogleSignIn = async () => {
+  try {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard/member",
+    });
+    
+  } catch (error) {
+    console.error("Google sign-in error:", error);
+  }
+}
 
-//     formData.forEach((value, key) => {
-//       data[key] = value.toString();
-//     });
-
-//     console.log(data);
-//     const { email, password } = data;
-//     try {
-//     const { data, error } = await authClient.signIn.email({
-//     email, // required
-//     password, // required
-//     // rememberMe: true,
-//     callbackURL: "/",
-// });
-// console.log("Sign-in response:", data);
-//   } catch (error) {
-//     // show toast
-//     console.error("Sign-in error:", error);
-//   }
-//   const role = data?.user?.role || "member";
-//   console.log("User role:", role);
-//   };
 const onSubmit = async (e) => {
   e.preventDefault();
 
@@ -206,12 +192,14 @@ const onSubmit = async (e) => {
               </div>
 
               {/* Google Login */}
-              <Button
+              <button
+              type="button"
+                onClick={handleGoogleSignIn}
                 variant="secondary"
-                className="h-12 w-full rounded-full border border-gray-300/70 bg-white/50 hover:bg-white/80 transition-all font-medium text-sm text-[#2F3A2F]"
+                className="h-12 w-full cursor-pointer rounded-full border border-gray-300/70 bg-white/50 hover:bg-white/80 transition-all font-medium text-sm text-[#2F3A2F]"
               >
                 Continue with Google
-              </Button>
+              </button>
 
               {/* Sign Up */}
               <p className="text-center text-xs text-[#5D6B57] w-full mt-2">

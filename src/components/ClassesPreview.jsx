@@ -1,82 +1,10 @@
-// "use client";
 
-// import React, { useEffect, useState } from "react";
-// import ClassCard from "../components/ClassCard";
-// import Link from "next/link";
-
-// export default function ClassesPreview() {
-//   const [classes, setClasses] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState("");
-
-//   useEffect(() => {
-//     const fetchClasses = async () => {
-//       try {
-//         const res = await fetch("http://localhost:5000/api/classes?limit=3");
-
-//         if (!res.ok) {
-//           throw new Error("Failed to fetch classes");
-//         }
-
-//         const data = await res.json();
-//         setClasses(data);
-//       } catch (err) {
-//         setError(err.message);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchClasses();
-//   }, []);
-
-//   if (loading) {
-//     return (
-//       <section className="px-30 py-20">
-//         <p className="text-center text-lg">Loading classes...</p>
-//       </section>
-//     );
-//   }
-
-//   if (error) {
-//     return (
-//       <section className="px-30 py-20">
-//         <p className="text-center text-red-500">{error}</p>
-//       </section>
-//     );
-//   }
-
-//   return (
-//     <section className="px-30 py-20 bg-[#e9f0e4]/40 backdrop-blur-xl border border-[#c7d6b8]/40 shadow-lg">
-//       <div className="flex justify-between items-center mb-12">
-//         <div>
-//           <h2 className="text-4xl font-bold text-[#2F3A2F]">
-//             Popular Classes
-//           </h2>
-
-//           <p className="mt-2 text-[#5D6B57]">
-//             Join expertly designed training sessions
-//           </p>
-//         </div>
-
-//         <Link href="/allclasses" className="hidden md:block px-5 py-3 rounded-full border border-[#A3B18A]">
-//           View All →
-//         </Link>
-//       </div>
-
-//       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-//         {classes.map((item) => (
-//           <ClassCard key={item._id} item={item} />
-//         ))}
-//       </div>
-//     </section>
-//   );
-// }
 "use client";
 
 import React, { useEffect, useState } from "react";
 import ClassCard from "../components/ClassCard";
 import Link from "next/link";
+import { ArrowRight } from "@gravity-ui/icons";
 
 export default function ClassesPreview() {
   const [classes, setClasses] = useState([]);
@@ -120,7 +48,7 @@ export default function ClassesPreview() {
               <span className="h-1.5 w-1.5 rounded-full bg-[#6B8E23]"></span>
               Trending Sessions
             </span>
-            <h2 className="text-4xl font-black tracking-tight text-[#2F3A2F] md:text-5xl">
+            <h2 className="text-3xl font-(--font-plus-jakarta) tracking-tight text-[#2F3A2F] md:text-5xl">
               Popular Classes
             </h2>
             <p className="text-base font-medium text-[#5D6B57]/90 max-w-md">
@@ -128,7 +56,7 @@ export default function ClassesPreview() {
             </p>
           </div>
 
-          <Link 
+          {/* <Link 
             href="/allclasses" 
             className="group flex items-center justify-center gap-2 rounded-2xl border border-white/70 bg-white/40 px-6 py-3.5 text-sm font-bold text-[#2F3A2F] shadow-sm backdrop-blur-md transition-all duration-300 hover:bg-[#6B8E23]  hover:border-[#6B8E23] hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98]"
           >
@@ -136,7 +64,39 @@ export default function ClassesPreview() {
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-4 w-4 transition-transform group-hover:translate-x-1">
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
             </svg>
-          </Link>
+          </Link> */}
+          <Link
+    href="/allclasses"
+    className="
+      
+      group
+      inline-flex
+      h-14
+      items-center
+      justify-center
+      gap-3
+      rounded-full
+      bg-linear-to-r
+      from-[#6B8E23]
+      to-[#5A7A1E]
+      px-8
+      font-(--font-plus-jakarta)
+      font-weight-bold
+      text-white
+      shadow-xl
+      shadow-[#6B8E23]/20
+      transition-all
+      duration-300
+      hover:-translate-y-0.5
+      hover:opacity-95
+      hover:shadow-2xl
+      hover:shadow-[#6B8E23]/30
+      active:scale-[0.98]
+    "
+  >
+    View All Classes
+    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+  </Link>
         </div>
 
         {/* LOADING STATE - GLASSMORPHIC SKELETON CARDS */}

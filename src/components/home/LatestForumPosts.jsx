@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight } from "@gravity-ui/icons";
 
 export default function LatestForumPosts() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -41,7 +42,7 @@ export default function LatestForumPosts() {
             Community Forum
           </span>
 
-          <h2 className="mt-5 text-4xl font-black text-[#2F3A2F] md:text-5xl">
+          <h2 className="mt-5 text-3xl font-(--font-plus-jakarta) text-[#2F3A2F] md:text-5xl">
             Latest Fitness Stories
           </h2>
 
@@ -87,7 +88,7 @@ export default function LatestForumPosts() {
                     {post.category || "General"}
                   </span>
 
-                  <h3 className="mt-4 line-clamp-2 text-xl font-bold text-[#2F3A2F]">
+                  <h3 className="font-(--font-plus-jakarta) mt-4 line-clamp-2 text-xl font-weight-bold text-[#2F3A2F]">
                     {post.title}
                   </h3>
 
@@ -99,25 +100,74 @@ export default function LatestForumPosts() {
                     {post.shortDescription || post.content}
                   </p>
 
-                  <Link
-                  type="button"
-                    href={`/forum/${post._id}`}
-                    className="inline-flex items-center justify-center
-  rounded-full
-  !bg-[#6B8E23]
-  w-full
-  mt-3
-  px-4 py-3
-  font-bold
-  !text-white
-  border-2 border-[#4F6B1B]
-  shadow-xl
-  hover:bg-[#55741C]
-  transition-all"
-          >
-                  
-                    Read More
-                  </Link>
+                 
+                  {/* <Link
+    href={`/forum/${post._id}`}
+    className="
+      w-full
+      group
+      inline-flex
+      h-14
+      items-center
+      justify-center
+      gap-3
+      rounded-full
+      bg-linear-to-r
+      from-[#6B8E23]
+      to-[#5A7A1E]
+      px-8
+      font-(--font-plus-jakarta)
+      font-weight-bold
+      text-white
+      shadow-xl
+      shadow-[#6B8E23]/20
+      transition-all
+      duration-300
+      hover:-translate-y-0.5
+      hover:opacity-95
+      hover:shadow-2xl
+      hover:shadow-[#6B8E23]/30
+      active:scale-[0.98]
+    "
+  >
+    Read More
+    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+  </Link> */}
+  <Link
+  href={`/forum/${post._id}`}
+  className="
+    group
+    inline-flex
+    h-14
+    w-full
+    items-center
+    justify-center
+    gap-3
+    rounded-full
+    bg-gradient-to-r
+    from-[#6B8E23]
+    to-[#5A7A1E]
+    px-8
+    font-[family:var(--font-plus-jakarta)]
+    text-base
+    font-bold
+    tracking-wide
+    text-white
+    shadow-xl
+    shadow-[#6B8E23]/20
+    transition-all
+    duration-300
+    hover:-translate-y-0.5
+    hover:opacity-95
+    hover:shadow-2xl
+    hover:shadow-[#6B8E23]/30
+    active:scale-[0.98]
+  "
+>
+  <span>Read More</span>
+
+  <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+</Link>
                 </div>
               </motion.article>
             ))}

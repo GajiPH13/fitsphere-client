@@ -124,11 +124,11 @@ export default function WhyChooseFitSphere() {
             Why FitSphere
           </span>
 
-          <h2 className="text-4xl font-black tracking-tight text-[#2F3A2F] md:text-5xl lg:text-6xl">
-            Fitness Made <span className="bg-gradient-to-r from-[#6B8E23] to-[#3A5311] bg-clip-text text-transparent">Simple.</span>
+          <h2 className="text-3xl font-(--font-plus-jakarta) tracking-tight text-[#2F3A2F] md:text-4xl lg:text-5xl">
+            Fitness Made <span className="font-(--font-plus-jakarta) bg-linear-to-r from-[#6B8E23] to-[#3A5311] bg-clip-text text-transparent">Simple.</span>
           </h2>
 
-          <p className="mx-auto max-w-2xl text-lg font-medium leading-relaxed text-[#5D6B57]/90">
+          <p className="mx-auto max-w-2xl text-lg font-[family:var(--font-plus-jakarta)] font-weight-medium leading-relaxed text-[#5D6B57]/90">
             FitSphere helps members discover premium classes, coordinate instantly with elite local trainers,
             and stay fully accountable with a supportive fitness community.
           </p>
@@ -152,11 +152,11 @@ export default function WhyChooseFitSphere() {
                   {item.icon}
                 </div>
 
-                <h3 className="text-2xl font-black tracking-tight text-[#2F3A2F]">
+                <h3 className="text-2xl  font-[family:var(--font-plus-jakarta)] font-weight-bold tracking-tight text-black">
                   {item.title}
                 </h3>
 
-                <p className="mt-3 text-base font-medium leading-relaxed text-[#5D6B57]/90">
+                <p className="mt-3 text-base font-[family:var(--font-plus-jakarta)] font-weight-medium leading-relaxed text-[#5D6B57]/90">
                   {item.description}
                 </p>
               </div>
