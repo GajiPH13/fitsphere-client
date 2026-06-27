@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -37,8 +38,15 @@ export default function MemberFavoritesPage() {
 
       try {
         setLoading(true);
-
-        const res = await fetch(`${API_URL}/api/favorites/user/${userId}`);
+        if(!userId){
+          return;
+        }
+        const res = await fetch(`${API_URL}/api/favorites/user/${userId}`,{
+          headers: {
+            "Content-Type": "application/json",
+            "x-user-id": user.id,
+          },
+        });
 
         if (!res.ok) {
           throw new Error("Failed to fetch favorite classes");
@@ -85,7 +93,6 @@ export default function MemberFavoritesPage() {
       }
 
       setFavorites((prev) => prev.filter((item) => item._id !== classId));
-
       alert("Favorite removed successfully");
     } catch (error) {
       console.error("Remove favorite error:", error);
@@ -96,113 +103,142 @@ export default function MemberFavoritesPage() {
   };
 
   if (isPending || loading) {
-    return <p className="p-10 text-center">Loading favorite classes...</p>;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#EDF3E7]">
+        <p className="text-sm font-semibold text-[#2F3A2F] animate-pulse">Loading favorite classes...</p>
+      </div>
+    );
   }
 
   if (role !== "member") {
     return (
-      <main className="min-h-screen bg-[#EDF3E7] px-6 py-20 text-center">
-        <h1 className="text-3xl font-bold text-[#2F3A2F]">Access Denied</h1>
-        <p className="mt-3 text-[#5D6B57]">
-          Only members can view favorite classes.
-        </p>
+      <main className="flex min-h-screen items-center justify-center bg-[#EDF3E7] px-4">
+        <div className="max-w-sm rounded-2xl border border-white/50 bg-white/60 p-6 text-center shadow-lg backdrop-blur-xl">
+          <h1 className="text-xl font-black text-[#2F3A2F]">Access Denied</h1>
+          <p className="mt-1.5 text-xs text-[#5D6B57]">Only members can view favorite classes.</p>
+        </div>
       </main>
     );
   }
 
   if (error) {
-    return <p className="p-10 text-center text-red-500">{error}</p>;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#EDF3E7]">
+        <p className="text-sm font-semibold text-red-500">{error}</p>
+      </div>
+    );
   }
 
   return (
-    <main className="min-h-screen bg-[#EDF3E7] px-6 py-12 md:px-16 lg:px-24">
-      <section className="mx-auto max-w-7xl rounded-[36px] border border-white/40 bg-white/70 p-8 shadow-2xl backdrop-blur-2xl">
-        <div className="mb-10">
-          <h1 className="text-4xl font-black text-[#2F3A2F]">
+    <main className="relative overflow-hidden min-h-screen bg-gradient-to-br from-[#EDF3E7] via-[#E4ECD9] to-[#D5E2C4] px-4 py-10 md:px-10 lg:px-16 antialiased">
+      
+      {/* BACKGROUND MESH SYSTEM */}
+      <div className="absolute top-12 left-1/4 h-64 w-64 rounded-full bg-[#6B8E23]/10 blur-[60px] pointer-events-none" />
+      <div className="absolute bottom-12 right-1/4 h-72 w-72 rounded-full bg-[#A3B18A]/20 blur-[70px] pointer-events-none" />
+
+      <section className="relative mx-auto max-w-6xl rounded-3xl border border-white/60 bg-white/35 p-6 shadow-xl backdrop-blur-xl z-10">
+        
+        {/* COMPACT HEADER BLOCK */}
+        <div className="mb-6 space-y-0.5">
+          <span className="inline-flex items-center gap-1 rounded-full border border-white/60 bg-white/40 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#5A7A1E]">
+            <span className="h-1 w-1 rounded-full bg-[#6B8E23]"></span>
+            Saved Engine
+          </span>
+          <h1 className="text-2xl font-black tracking-tight text-[#2F3A2F]">
             Favorite Classes
           </h1>
-          <p className="mt-2 text-[#5D6B57]">
-            Your saved fitness classes in one place.
+          <p className="text-xs font-medium text-[#5D6B57]/90">
+            Your saved fitness classes organized into a fast, manageable space.
           </p>
         </div>
 
+        {/* EMPTY STATE */}
         {favorites.length === 0 ? (
-          <div className="rounded-3xl border border-[#A3B18A]/40 bg-white/60 p-10 text-center">
-            <h2 className="text-2xl font-bold text-[#2F3A2F]">
-              No favorites yet
-            </h2>
-            <p className="mt-2 text-[#5D6B57]">
-              Add classes to favorites from the class details page.
+          <div className="rounded-2xl border border-white/50 bg-white/40 p-8 text-center backdrop-blur-sm">
+            <h2 className="text-lg font-black text-[#2F3A2F]">No favorites yet</h2>
+            <p className="mt-1 text-xs text-[#5D6B57]">
+              Add classes to favorites from the class details view panel.
             </p>
           </div>
         ) : (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          
+          /* CONDENSED CARD GRID */
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {favorites.map((item) => (
               <article
                 key={item._id}
-                className="overflow-hidden rounded-[32px] border border-white/40 bg-white/70 shadow-xl backdrop-blur-2xl"
+                className="group flex flex-col overflow-hidden rounded-2xl border border-white/60 bg-white/40 shadow-md backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/50 hover:shadow-lg"
               >
-                <div className="relative h-56 bg-[#DDE5D0]">
+                {/* Image Box scaled down by 20% (h-56 -> h-44) */}
+                <div className="relative h-44 w-full bg-[#DDE5D0] overflow-hidden">
                   {item.image ? (
                     <Image
                       src={item.image}
                       alt={item.title}
                       fill
-                      className="object-cover"
+                      className="object-cover transition-transform duration-500 group-hover:scale-102"
                     />
                   ) : (
-                    <div className="flex h-full items-center justify-center text-[#556B2F]">
-                      No Image
+                    <div className="flex h-full items-center justify-center text-xs font-bold text-[#556B2F]">
+                      No Preview Available
                     </div>
                   )}
                 </div>
 
-                <div className="p-6">
-                  <div className="flex flex-wrap gap-2">
-                    <span className="rounded-full bg-[#DDE5D0] px-3 py-1 text-xs font-bold text-[#556B2F]">
-                      {item.category || "General"}
-                    </span>
+                {/* Content Frame with tighter text margins */}
+                <div className="flex flex-1 flex-col p-4 justify-between">
+                  <div>
+                    {/* Tighter badge tags */}
+                    <div className="flex flex-wrap gap-1.5">
+                      <span className="rounded-md bg-[#6B8E23]/10 px-2 py-0.5 text-[10px] font-bold text-[#5A7A1E]">
+                        {item.category || "General"}
+                      </span>
+                      <span className="rounded-md bg-white/80 border border-white/40 px-2 py-0.5 text-[10px] font-bold text-[#5D6B57]">
+                        {item.level || "All Levels"}
+                      </span>
+                    </div>
 
-                    <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-[#5D6B57]">
-                      {item.level || "All Levels"}
-                    </span>
+                    <h2 className="mt-2.5 text-lg font-black tracking-tight text-[#2F3A2F] line-clamp-1">
+                      {item.title}
+                    </h2>
+
+                    <p className="mt-0.5 text-xs font-medium text-[#5D6B57]/80">
+                      Trainer: {item.trainer || item.trainerName || "Unknown"}
+                    </p>
+
+                    <p className="mt-2 line-clamp-2 text-xs leading-normal text-[#4B5A42]">
+                      {item.description}
+                    </p>
                   </div>
 
-                  <h2 className="mt-4 text-2xl font-bold text-[#2F3A2F]">
-                    {item.title}
-                  </h2>
+                  <div>
+                    {/* Metrics Row (Tightened Spacing) */}
+                    <div className="mt-3.5 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[11px] font-bold text-[#5D6B57] border-t border-white/30 pt-2.5">
+                      <span className="flex items-center gap-1">⏱️ {item.duration}</span>
+                      <span className="text-[#6B8E23]">${item.price || 0}</span>
+                      <span className="line-clamp-1">📅 {item.schedule || "Not set"}</span>
+                    </div>
 
-                  <p className="mt-2 text-sm text-[#5D6B57]">
-                    Trainer: {item.trainer || item.trainerName || "Unknown"}
-                  </p>
+                    {/* Compressed Action Row */}
+                    <div className="mt-4 flex gap-2">
+                      <Link
+                        href={`/allclasses/${item._id}`}
+                        className="flex-1 rounded-xl !bg-[#6B8E23] py-2 text-center text-xs font-bold !text-white shadow-sm transition hover:opacity-95"
+                      >
+                        View Details
+                      </Link>
 
-                  <p className="mt-4 line-clamp-3 text-sm leading-6 text-[#4B5A42]">
-                    {item.description}
-                  </p>
-
-                  <div className="mt-5 flex flex-wrap gap-3 text-xs font-semibold text-[#5D6B57]">
-                    <span>{item.duration}</span>
-                    <span>${item.price || 0}</span>
-                    <span>{item.schedule || "Schedule not set"}</span>
+                      <button
+                        type="button"
+                        disabled={removingId === item._id}
+                        onClick={() => handleRemoveFavorite(item._id)}
+                        className="flex-1 rounded-xl bg-red-500/10 border border-red-200/40 py-2 text-xs font-bold text-red-600 transition hover:bg-red-500 hover:text-white disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+                      >
+                        {removingId === item._id ? "Removing..." : "Remove"}
+                      </button>
+                    </div>
                   </div>
 
-                  <div className="mt-6 flex gap-3">
-                    <Link
-                      href={`/allclasses/${item._id}`}
-                      className="flex-1 rounded-full bg-[#6B8E23] px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#5A7A1E]"
-                    >
-                      View Details
-                    </Link>
-
-                    <button
-                      type="button"
-                      disabled={removingId === item._id}
-                      onClick={() => handleRemoveFavorite(item._id)}
-                      className="flex-1 rounded-full bg-red-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:bg-gray-400"
-                    >
-                      {removingId === item._id ? "Removing..." : "Remove"}
-                    </button>
-                  </div>
                 </div>
               </article>
             ))}

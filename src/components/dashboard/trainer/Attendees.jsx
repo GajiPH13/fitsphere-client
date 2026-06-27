@@ -35,8 +35,17 @@ export default function TrainerAttendeesPage() {
 
       try {
         setLoading(true);
-
-        const res = await fetch(`${API_URL}/api/bookings/trainer/${trainerId}`);
+        if(!trainerId){
+          return;
+        }
+        const res = await fetch(
+          `${API_URL}/api/bookings/trainer/${trainerId}`,{
+            headers: {
+              "Content-Type": "application/json",
+              "x-user-id": user.id,
+            },
+          });
+        
 
         if (!res.ok) {
           throw new Error("Failed to fetch attendees");
@@ -142,13 +151,10 @@ export default function TrainerAttendeesPage() {
                           className="object-cover"
                         /> */}
                         <p className="font-semibold text-[#2F3A2F]">Username</p>
-                        <p className="text-sm text-[#5D6B57]">
-                        {user?.name}
-                        </p>
+                        <p className="text-sm text-[#5D6B57]">{user?.name}</p>
                         <p className="font-semibold text-[#2F3A2F]">User ID</p>
                         <p className="text-sm text-[#5D6B57]">
                           {booking.userId}
-                          
                         </p>
                       </div>
 

@@ -36,8 +36,15 @@ export default function TrainerClassesPage() {
 
       try {
         setLoading(true);
-
-        const res = await fetch(`${API_URL}/api/classes/trainer/${trainerId}`);
+        if(!trainerId){
+          return;
+        }
+        const res = await fetch(`${API_URL}/api/classes/trainer/${trainerId}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "x-user-id": user.id,
+          },
+        });
 
         if (!res.ok) {
           throw new Error("Failed to fetch your classes");

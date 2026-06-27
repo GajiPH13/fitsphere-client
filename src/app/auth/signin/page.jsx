@@ -217,7 +217,7 @@ const onSubmit = async (e) => {
               <p className="text-center text-xs text-[#5D6B57] w-full mt-2">
                 Don&apos;t have an account?{" "}
                 <Link
-                  href="/signup"
+                  href="/auth/signup"
                   className="font-semibold text-[#6B8E23] hover:underline"
                 >
                   Sign Up

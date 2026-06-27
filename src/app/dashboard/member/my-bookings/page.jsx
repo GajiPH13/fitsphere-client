@@ -35,8 +35,15 @@ export default function MemberBookingsPage() {
 
       try {
         setLoading(true);
-
-        const res = await fetch(`${API_URL}/api/bookings/user/${userId}`);
+        if(!userId){
+          return;
+        }
+        const res = await fetch(`${API_URL}/api/bookings/user/${userId}`,{
+          headers: {
+            "Content-Type": "application/json",
+            "x-user-id": user.id,
+          },
+        });
 
         if (!res.ok) {
           throw new Error("Failed to fetch bookings");

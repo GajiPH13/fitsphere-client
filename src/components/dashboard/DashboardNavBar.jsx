@@ -1,12 +1,14 @@
+
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   PersonFill,
   ArrowRightToSquare,
   Bars,
   Xmark,
   Magnifier,
+  BellDot,
 } from "@gravity-ui/icons";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,39 +16,120 @@ import { usePathname, useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 
 export default function DashboardNavBar() {
-  const {data: session, isPending: loading} = authClient.useSession();
+  const { data: session, isPending: loading } = authClient.useSession();
+
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  // const [session, setSession] = useState(null);
-  // const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [readNotifications, setReadNotifications] = useState([]);
 
   const pathname = usePathname();
   const router = useRouter();
 
-  const dashboardHref = `/dashboard/${session?.user?.role || "member"}`;
+  const user = session?.user;
+  const userRole = user?.role;
+  const dashboardHref = `/dashboard/${userRole || "member"}`;
+
+  const notifications = useMemo(() => {
+    const data = {
+      admin: [
+        {
+          id: "admin-trainer-applications",
+          text: "New trainer applications",
+          href: "/dashboard/admin/trainer-applications",
+        },
+        {
+          id: "admin-pending-classes",
+          text: "New classes waiting for approval",
+          href: "/dashboard/admin/classes",
+        },
+        {
+          id: "admin-forum-posts",
+          text: "New forum posts published",
+          href: "/dashboard/admin/forum",
+        },
+      ],
+      trainer: [
+        {
+          id: "trainer-attendees",
+          text: "New attendee bookings",
+          href: "/dashboard/trainer/attendees",
+        },
+        {
+          id: "trainer-classes",
+          text: "Class approval status updated",
+          href: "/dashboard/trainer/classes",
+        },
+        {
+          id: "trainer-forum",
+          text: "New forum engagement",
+          href: "/dashboard/trainer/forum",
+        },
+      ],
+      member: [
+        {
+          id: "member-classes",
+          text: "New classes available",
+          href: "/allclasses",
+        },
+        {
+          id: "member-forum",
+          text: "New forum posts",
+          href: "/forum",
+        },
+        {
+          id: "member-subscription",
+          text: "Subscription updates",
+          href: "/dashboard/member/subscriptions",
+        },
+      ],
+    };
+
+    return data[userRole] || [];
+  }, [userRole]);
+
+  const storageKey = user?.id
+    ? `fitsphere_notifications_read_${user.id}_${userRole}`
+    : null;
+
+  useEffect(() => {
+    if (!storageKey) return;
+
+    const saved = localStorage.getItem(storageKey);
+    setReadNotifications(saved ? JSON.parse(saved) : []);
+  }, [storageKey]);
+
+  const unreadNotifications = notifications.filter(
+    (item) => !readNotifications.includes(item.id)
+  );
+
+  const notificationCount = unreadNotifications.length;
+
+  const markNotificationAsRead = (notificationId) => {
+    if (!storageKey) return;
+
+    const updated = Array.from(new Set([...readNotifications, notificationId]));
+
+    setReadNotifications(updated);
+    localStorage.setItem(storageKey, JSON.stringify(updated));
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    const matched = notifications.find((item) => item.href === pathname);
+
+    if (matched && !readNotifications.includes(matched.id)) {
+      markNotificationAsRead(matched.id);
+    }
+  }, [pathname, notifications, readNotifications]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
+
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // useEffect(() => {
-  //   async function fetchSession() {
-  //     try {
-  //       const res = await authClient.getSession();
-  //       setSession(res?.data?.session ? res.data : null);
-  //     } catch (err) {
-  //       console.error("Failed to load session:", err);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-
-  //   fetchSession();
-  // }, [pathname]);
- 
   const handleSearch = (e) => {
     e.preventDefault();
 
@@ -58,17 +141,16 @@ export default function DashboardNavBar() {
 
     setIsOpen(false);
   };
-// sign out function
+
   const handleSignOut = async () => {
-  try {
-    await authClient.signOut();
-    setIsOpen(false);
-    router.refresh();
-    router.push("/auth/signin");
-  } catch (err) {
-    console.error("Error signing out:", err);
-  }
-};
+    try {
+      await authClient.signOut();
+      setIsOpen(false);
+      router.replace("/");
+    } catch (err) {
+      console.error("Error signing out:", err);
+    }
+  };
 
   return (
     <>
@@ -124,6 +206,7 @@ export default function DashboardNavBar() {
               />
               <circle cx="100" cy="102" r="7" fill="#A3B18A" />
             </svg>
+
             <span className="tracking-tight">FitSphere</span>
           </Link>
 
@@ -150,12 +233,19 @@ export default function DashboardNavBar() {
           <div className="hidden items-center gap-3 md:flex">
             {!loading && session ? (
               <>
+                <NotificationBell
+                  notificationCount={notificationCount}
+                  notifications={notifications}
+                  readNotifications={readNotifications}
+                  onRead={markNotificationAsRead}
+                />
+
                 <div className="flex items-center gap-2 border-r border-[#d7dfc6]/60 pr-2">
                   <div className="relative h-8 w-8 overflow-hidden rounded-full border border-[#6B8E23] bg-white">
-                    {session.user?.image ? (
+                    {user?.image ? (
                       <Image
-                        src={session.user.image}
-                        alt={session.user.name || "User Avatar"}
+                        src={user.image}
+                        alt={user.name || "User Avatar"}
                         fill
                         className="object-cover"
                       />
@@ -168,14 +258,14 @@ export default function DashboardNavBar() {
 
                   <div className="flex max-w-[130px] flex-col">
                     <span className="truncate text-xs font-semibold text-[#2f3a2f]">
-                      {session.user?.name}
+                      {user?.name}
                     </span>
                     <span className="truncate text-[10px] font-medium uppercase text-[#6B8E23]">
-                      {session.user?.role}
+                      {user?.role}
                     </span>
                   </div>
                 </div>
-{/* sign out button */}
+
                 <button
                   type="button"
                   onClick={handleSignOut}
@@ -242,30 +332,39 @@ export default function DashboardNavBar() {
 
             {!loading && session && (
               <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-[#d7dfc6]/40 bg-white/50 p-3">
-                <div className="flex items-center gap-3">
-                  <div className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-[#6B8E23]">
-                    {session.user?.image ? (
-                      <Image
-                        src={session.user.image}
-                        alt="User Profile"
-                        fill
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-gray-200 text-[#2f3a2f]">
-                        <PersonFill size={16} />
-                      </div>
-                    )}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-[#6B8E23]">
+                      {user?.image ? (
+                        <Image
+                          src={user.image}
+                          alt="User Profile"
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center bg-gray-200 text-[#2f3a2f]">
+                          <PersonFill size={16} />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex min-w-0 flex-col">
+                      <span className="truncate text-sm font-bold text-[#2f3a2f]">
+                        {user?.name}
+                      </span>
+                      <span className="truncate text-xs text-[#5D6B57]">
+                        {user?.email}
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="flex min-w-0 flex-col">
-                    <span className="truncate text-sm font-bold text-[#2f3a2f]">
-                      {session.user?.name}
-                    </span>
-                    <span className="truncate text-xs text-[#5D6B57]">
-                      {session.user?.email}
-                    </span>
-                  </div>
+                  <NotificationBell
+                    notificationCount={notificationCount}
+                    notifications={notifications}
+                    readNotifications={readNotifications}
+                    onRead={markNotificationAsRead}
+                  />
                 </div>
 
                 <button
@@ -342,5 +441,76 @@ export default function DashboardNavBar() {
         </div>
       </div>
     </>
+  );
+}
+
+function NotificationBell({
+  notificationCount,
+  notifications,
+  readNotifications,
+  onRead,
+}) {
+  return (
+    <div className="group relative">
+      <button
+        type="button"
+        className="relative flex h-10 w-10 items-center justify-center rounded-full border border-[#d7dfc6]/70 bg-white/60 text-[#2F3A2F] shadow-sm transition hover:bg-white"
+        aria-label="Notifications"
+      >
+        <BellDot size={18} />
+
+        {notificationCount > 0 && (
+          <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+            {notificationCount}
+          </span>
+        )}
+      </button>
+
+      <div className="invisible absolute right-0 top-12 z-50 w-80 rounded-2xl border border-[#d7dfc6]/70 bg-white p-4 opacity-0 shadow-xl transition-all group-hover:visible group-hover:opacity-100">
+        <div className="flex items-center justify-between">
+          <h4 className="text-sm font-bold text-[#2F3A2F]">Notifications</h4>
+          <span className="rounded-full bg-[#EDF3E7] px-2 py-1 text-[10px] font-bold text-[#6B8E23]">
+            {notificationCount} new
+          </span>
+        </div>
+
+        <div className="mt-3 space-y-2">
+          {notifications.length > 0 ? (
+            notifications.map((item) => {
+              const isRead = readNotifications.includes(item.id);
+
+              return (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  onClick={() => onRead(item.id)}
+                  className={`block rounded-xl px-3 py-2 text-xs font-medium transition hover:bg-[#DDE5D0] ${
+                    isRead
+                      ? "bg-gray-100 text-gray-500"
+                      : "bg-[#EDF3E7] text-[#4B5A42]"
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <span>{item.text}</span>
+
+                    {!isRead && (
+                      <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-red-500" />
+                    )}
+                  </div>
+
+                  <span className="mt-1 block text-[10px] font-semibold text-[#6B8E23]">
+                    Open →
+                  </span>
+                </Link>
+              );
+            })
+          ) : (
+            <p className="rounded-xl bg-[#EDF3E7] px-3 py-2 text-xs font-medium text-[#4B5A42]">
+              No notifications available.
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

@@ -21,7 +21,6 @@ const { data: session, isPending:loading } = authClient.useSession();
   const navItems = [
     { label: "Home", href: "/" },
     { label: "Classes", href: "/allclasses" },
-    { label: "Trainers", href: "/trainerapplication" },
     { label: "Forums", href: "/forum" },
     { label: "Dashboard", href: `/dashboard/${session?.user?.role || "member"}` },
   ];
@@ -57,7 +56,7 @@ const { data: session, isPending:loading } = authClient.useSession();
     await authClient.signOut();
     setIsOpen(false);
     router.refresh();
-    router.push("/auth/signin");
+    router.push("/");
   } catch (err) {
     console.error("Error signing out:", err);
   }

@@ -3,7 +3,7 @@ import {
   Gear,
   House,
   Person,
-  ChartColumn,
+  FolderOpenFill,
   BookOpen,
   Persons,
   LayoutList,
@@ -12,6 +12,7 @@ import {
   Calculator,
   
 } from "@gravity-ui/icons";
+
 import { Button, Drawer } from "@heroui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -30,12 +31,12 @@ export function DashboardSideBar({ role = "member", mobileOnly = false }) {
     ],
     trainer: [
       { icon: House, href: "/dashboard/trainer", label: "Dashboard" },
-      { icon: Gear, href: "/dashboard/trainer/classes", label: "My Classes" },
+      { icon: FolderOpenFill, href: "/dashboard/trainer/classes", label: "My Classes" },
       { icon: Persons, href: "/dashboard/trainer/attendees", label: "Attendees" },
-      { icon: ChartColumn, href: "/dashboard/trainer/analytics", label: "Analytics" },
+      // { icon: ChartColumn, href: "/dashboard/trainer/analytics", label: "Analytics" },
       { icon: BookOpen, href: "/dashboard/trainer/forum", label: "Forum" },
-      { icon: Person, href: "/dashboard/trainer/profile", label: "Profile" },
-      { icon: Gear, href: "/dashboard/trainer/settings", label: "Settings" },
+      // { icon: Person, href: "/dashboard/trainer/profile", label: "Profile" },
+      // { icon: Gear, href: "/dashboard/trainer/settings", label: "Settings" },
     ],
     admin: [
       { icon: House, href: "/dashboard/admin", label: "Dashboard" },
@@ -67,7 +68,7 @@ export function DashboardSideBar({ role = "member", mobileOnly = false }) {
             href={item.href}
             className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all ${
               isActive
-                ? "bg-[#6B8E23] text-[#4b5a4b] shadow-md shadow-[#6B8E23]/10"
+                ? "bg-[#6B8E23] text-[#4b5a4b] shadow-md border-2 shadow-[#6B8E23]/10"
                 : "text-[#4b5a4b] hover:bg-[#6B8E23]/5 hover:text-[#2f3a2f]"
             }`}
           >

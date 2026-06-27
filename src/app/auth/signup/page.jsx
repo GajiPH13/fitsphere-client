@@ -70,7 +70,7 @@ export default function SignupForm() {
     /* Perfectly centered container on the screen */
     <div className="min-h-screen w-full bg-[#EDF3E7] flex items-center justify-center p-4 md:p-6 selection:bg-[#6B8E23]/30">
       {/* Medium sized (max-w-4xl) side-by-side glassmorphic card */}
-      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 rounded-[32px] overflow-hidden shadow-2xl border border-white/40 bg-white/40 backdrop-blur-xl">
+      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 rounded-[32px] overflow-hidden shadow-2xl border border-white/40 bg-white/40 backdrop-blur-xl">
         {/* LEFT COLUMN: Main Form Inputs */}
         <div className="p-8 lg:p-10 flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/30">
           <div className="mb-6">
@@ -284,7 +284,7 @@ export default function SignupForm() {
             <p className="text-center text-xs text-[#5D6B57] w-full mt-1">
               Already have an account?{" "}
               <Link
-                href="/login"
+                href="/auth/signin"
                 className="font-bold text-[#6B8E23] hover:underline ml-1"
               >
                 Log In
