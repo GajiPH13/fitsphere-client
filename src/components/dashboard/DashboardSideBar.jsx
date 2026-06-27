@@ -6,10 +6,13 @@ import {
   FolderOpenFill,
   BookOpen,
   Persons,
-  LayoutList,
+  LayoutListUI,
   Bookmark,
   ListCheck,
   Calculator,
+  Comment,
+  SquareListUl,
+  Heart,
   
 } from "@gravity-ui/icons";
 
@@ -24,25 +27,25 @@ export function DashboardSideBar({ role = "member", mobileOnly = false }) {
     member: [
       { icon: House, href: "/dashboard/member", label: "Dashboard" },
       { icon: Calculator, href: "/dashboard/member/my-bookings", label: "My Bookings" },
-      { icon: Bookmark, href: "/dashboard/member/favorite-classes", label: "Favorite Classes" },
+      { icon: Heart, href: "/dashboard/member/favorite-classes", label: "Favorite Classes" },
       { icon: ListCheck, href: "/dashboard/member/subscriptions", label: "Subscriptions" },
       { icon: Person, href: "/dashboard/member/apply-trainer", label: "Apply as Trainer" },
       
     ],
     trainer: [
       { icon: House, href: "/dashboard/trainer", label: "Dashboard" },
-      { icon: FolderOpenFill, href: "/dashboard/trainer/classes", label: "My Classes" },
+      { icon: SquareListUl, href: "/dashboard/trainer/classes", label: "My Classes" },
       { icon: Persons, href: "/dashboard/trainer/attendees", label: "Attendees" },
       // { icon: ChartColumn, href: "/dashboard/trainer/analytics", label: "Analytics" },
-      { icon: BookOpen, href: "/dashboard/trainer/forum", label: "Forum" },
+      { icon: Comment, href: "/dashboard/trainer/forum", label: "Forum" },
       // { icon: Person, href: "/dashboard/trainer/profile", label: "Profile" },
       // { icon: Gear, href: "/dashboard/trainer/settings", label: "Settings" },
     ],
     admin: [
       { icon: House, href: "/dashboard/admin", label: "Dashboard" },
       { icon: Persons, href: "/dashboard/admin/users", label: "Users" },
-      { icon: LayoutList, href: "/dashboard/admin/trainer-applications", label: "Trainer Requests" },
-      { icon: LayoutList, href: "/dashboard/admin/classes", label: "Classes" },
+      { icon: FolderOpenFill, href: "/dashboard/admin/trainer-applications", label: "Trainer Requests" },
+      { icon: SquareListUl, href: "/dashboard/admin/classes", label: "Classes" },
       { icon: BookOpen, href: "/dashboard/admin/forum", label: "Forum" },
       
     ],
