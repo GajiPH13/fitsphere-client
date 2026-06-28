@@ -26,8 +26,8 @@ export default function MemberDashboardPage() {
 
   if (isPending) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#EDF3E7]">
-        <p className="animate-pulse text-sm font-semibold text-[#2F3A2F]">
+      <div className="flex min-h-screen items-center justify-center bg-[#EDF3E7] dark:bg-zinc-950 transition-colors">
+        <p className="animate-pulse text-sm font-semibold text-[#2F3A2F] dark:text-zinc-300">
           Loading dashboard...
         </p>
       </div>
@@ -38,12 +38,12 @@ export default function MemberDashboardPage() {
 
   if (role !== "member") {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#EDF3E7] px-5">
-        <div className="w-full max-w-md rounded-2xl border border-white/50 bg-white/60 p-6 text-center shadow-xl backdrop-blur-xl">
-          <h1 className="text-2xl font-black text-[#2F3A2F]">
+      <main className="flex min-h-screen items-center justify-center bg-[#EDF3E7] dark:bg-zinc-950 px-5 transition-colors">
+        <div className="w-full max-w-md rounded-2xl border border-white/50 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900 p-6 text-center shadow-xl backdrop-blur-xl">
+          <h1 className="text-2xl font-black text-[#2F3A2F] dark:text-zinc-50">
             Access Denied
           </h1>
-          <p className="mt-2 text-sm text-[#5D6B57]">
+          <p className="mt-2 text-sm text-[#5D6B57] dark:text-zinc-400">
             Only members can access this dashboard.
           </p>
         </div>
@@ -52,24 +52,24 @@ export default function MemberDashboardPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#EDF3E7] via-[#E4ECD9] to-[#D5E2C4] px-5 py-10 antialiased md:px-12 lg:px-20">
-      <div className="pointer-events-none absolute left-1/4 top-10 h-72 w-72 rounded-full bg-[#6B8E23]/10 blur-[60px]" />
-      <div className="pointer-events-none absolute bottom-10 right-1/4 h-72 w-72 rounded-full bg-[#A3B18A]/20 blur-[60px]" />
+    <main className="min-h-screen bg-[#EDF3E7] text-[#2F3A2F] dark:bg-gradient-to-br dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 dark:text-zinc-50 relative overflow-hidden bg-linear-to-br from-[#EDF3E7] via-[#E4ECD9] to-[#D5E2C4] px-5 py-10 antialiased md:px-12 lg:px-20 transition-colors">
+      <div className="pointer-events-none absolute left-1/4 top-10 h-72 w-72 rounded-full bg-[#6B8E23]/10 dark:bg-zinc-800/10 blur-[60px]" />
+      <div className="pointer-events-none absolute bottom-10 right-1/4 h-72 w-72 rounded-full bg-[#A3B18A]/20 dark:bg-zinc-800/5 blur-[60px]" />
 
       <section className="relative z-10 mx-auto max-w-6xl">
         <div className="mb-8 space-y-0.5">
-          <span className="inline-flex items-center gap-1 rounded-full border border-white/60 bg-white/40 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#5A7A1E]">
-            <span className="h-1 w-1 rounded-full bg-[#6B8E23]" />
+          <span className="inline-flex items-center gap-1 rounded-full border border-white/60 dark:border-zinc-700 bg-white/40 dark:bg-zinc-900 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#5A7A1E] dark:text-zinc-300">
+            <span className="h-1 w-1 rounded-full bg-[#6B8E23] dark:bg-zinc-400" />
             Ecosystem Core
           </span>
 
-          <h1 className="text-3xl font-black tracking-tight text-[#2F3A2F]">
+          <h1 className="text-3xl font-black tracking-tight text-[#2F3A2F] dark:text-zinc-50">
             Member Dashboard
           </h1>
 
-          <p className="text-sm font-medium text-[#5D6B57]/90">
+          <p className="text-sm font-medium text-[#5D6B57]/90 dark:text-zinc-400">
             Welcome back,{" "}
-            <span className="font-bold text-[#2F3A2F]">
+            <span className="font-bold text-[#2F3A2F] dark:text-zinc-200">
               {user.name || "Member"}
             </span>
             .
@@ -83,26 +83,26 @@ export default function MemberDashboardPage() {
           <InfoCard label="Current Plan" value={plan} />
         </div>
 
-        <div className="mt-6 rounded-2xl border border-white/50 bg-white/40 p-7 shadow-lg backdrop-blur-xl transition-all duration-200 hover:bg-white/45">
+        <div className="mt-6 rounded-2xl border border-white/50 dark:border-zinc-800 bg-white/40 dark:bg-zinc-900/90 p-7 shadow-lg backdrop-blur-xl transition-all duration-200 hover:bg-white/45 dark:hover:bg-zinc-900">
           <div className="flex flex-col justify-between gap-5 md:flex-row md:items-center">
             <div className="space-y-2.5">
               <span
                 className={`inline-flex rounded-md border px-3 py-1 text-xs font-bold capitalize shadow-sm ${
                   subscriptionStatus === "active"
-                    ? "border-green-200/50 bg-green-500/10 text-green-700"
-                    : "border-amber-200/50 bg-amber-500/10 text-amber-700"
+                    ? "border-green-200/50 dark:border-green-900/50 bg-green-500/10 text-green-700 dark:text-green-400"
+                    : "border-amber-200/50 dark:border-amber-900/50 bg-amber-500/10 text-amber-700 dark:text-amber-400"
                 }`}
               >
                 Subscription: {subscriptionStatus}
               </span>
 
-              <h2 className="text-2xl font-black tracking-tight text-[#2F3A2F]">
+              <h2 className="text-2xl font-black tracking-tight text-[#2F3A2F] dark:text-zinc-50">
                 {isFreePlan
                   ? "You are currently on the Free plan"
                   : `You are subscribed to the ${plan} plan`}
               </h2>
 
-              <p className="max-w-2xl text-sm font-medium leading-normal text-[#5D6B57]">
+              <p className="max-w-2xl text-sm font-medium leading-normal text-[#5D6B57] dark:text-zinc-400">
                 {isFreePlan
                   ? "Upgrade your plan to book classes and unlock premium member features."
                   : "Your subscription is active. You can book classes and save favorites."}
@@ -111,7 +111,7 @@ export default function MemberDashboardPage() {
 
             <Link
               href="/priceing"
-              className="inline-flex h-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-r from-[#6B8E23] to-[#5A7A1E] px-6 text-sm font-bold text-white shadow-md shadow-[#6B8E23]/10 transition-all duration-200 hover:opacity-95 hover:shadow-lg active:scale-[0.98]"
+              className="inline-flex h-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-r from-[#6B8E23] to-[#5A7A1E] dark:from-zinc-800 dark:to-zinc-700 px-6 text-sm font-bold text-white shadow-md shadow-[#6B8E23]/10 dark:shadow-none transition-all duration-200 hover:opacity-95 dark:hover:bg-zinc-600 hover:shadow-lg active:scale-[0.98]"
             >
               {isFreePlan ? "Upgrade Plan" : "Manage Plan"}
             </Link>
@@ -147,13 +147,13 @@ export default function MemberDashboardPage() {
 
 function InfoCard({ label, value, isEmail = false }) {
   return (
-    <div className="rounded-xl border border-white/50 bg-white/40 p-5 shadow-md backdrop-blur-md">
-      <p className="text-xs font-bold uppercase tracking-wider text-[#5D6B57]/80">
+    <div className="rounded-xl border border-white/50 dark:border-zinc-800 bg-white/40 dark:bg-zinc-950 p-5 shadow-md backdrop-blur-md">
+      <p className="text-xs font-bold uppercase tracking-wider text-[#5D6B57]/80 dark:text-zinc-400">
         {label}
       </p>
 
       <p
-        className={`mt-1 text-lg font-black capitalize tracking-tight text-[#2F3A2F] ${
+        className={`mt-1 text-lg font-black capitalize tracking-tight text-[#2F3A2F] dark:text-zinc-100 ${
           isEmail ? "break-all !lowercase font-medium" : ""
         }`}
       >
@@ -167,19 +167,19 @@ function ActionCard({ title, description, href, icon }) {
   return (
     <Link
       href={href}
-      className="group relative overflow-hidden rounded-2xl border border-white/50 bg-white/40 p-5 shadow-md backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/55 hover:shadow-lg"
+      className="group relative overflow-hidden rounded-2xl border border-white/50 dark:border-zinc-800 bg-white/40 dark:bg-zinc-950 p-5 shadow-md backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/55 dark:hover:bg-zinc-900 hover:shadow-lg"
     >
       <div className="flex items-center gap-3">
         <span className="select-none text-xl opacity-90 transition-transform duration-200 group-hover:scale-110">
           {icon}
         </span>
 
-        <h3 className="text-lg font-black tracking-tight text-[#2F3A2F]">
+        <h3 className="text-lg font-black tracking-tight text-[#2F3A2F] dark:text-zinc-50">
           {title}
         </h3>
       </div>
 
-      <p className="mt-1 pl-8 text-xs font-medium text-[#5D6B57]">
+      <p className="mt-1 pl-8 text-xs font-medium text-[#5D6B57] dark:text-zinc-400">
         {description}
       </p>
     </Link>

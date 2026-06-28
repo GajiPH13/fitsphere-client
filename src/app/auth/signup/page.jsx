@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from "react";
@@ -23,11 +24,12 @@ export default function SignupForm() {
   const router = useRouter();
 
   const handleGoogleAuth = async () => {
-  await authClient.signIn.social({
-    provider: "google",
-    callbackURL: "/dashboard/member",
-  });
-};
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard/member",
+    });
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -54,7 +56,6 @@ export default function SignupForm() {
         image: imageUrl || undefined,
         role: data.role,
         plan: "free",
-        // autoSignIn: false,
       });
 
       if (error) {
@@ -75,16 +76,17 @@ export default function SignupForm() {
 
   return (
     /* Perfectly centered container on the screen */
-    <div className="min-h-screen w-full bg-[#EDF3E7] flex items-center justify-center p-4 md:p-6 selection:bg-[#6B8E23]/30">
+    <div className="min-h-screen w-full bg-[#EDF3E7] dark:bg-zinc-950 flex items-center justify-center p-4 md:p-6 selection:bg-[#6B8E23]/30 transition-colors">
       {/* Medium sized (max-w-4xl) side-by-side glassmorphic card */}
-      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 rounded-[32px] overflow-hidden shadow-2xl border border-white/40 bg-white/40 backdrop-blur-xl">
+      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 rounded-[32px] overflow-hidden shadow-2xl border border-white/40 dark:border-zinc-800 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl">
+        
         {/* LEFT COLUMN: Main Form Inputs */}
-        <div className="p-8 lg:p-10 flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/30">
+        <div className="p-8 lg:p-10 flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/30 dark:border-zinc-800">
           <div className="mb-6">
-            <h1 className="text-3xl font-bold text-[#2F3A2F] tracking-tight">
+            <h1 className="text-3xl font-bold text-[#2F3A2F] dark:text-zinc-50 tracking-tight">
               Create Your Account
             </h1>
-            <p className="mt-1 text-sm text-[#5D6B57]">
+            <p className="mt-1 text-sm text-[#5D6B57] dark:text-zinc-400">
               Join FitSphere and start your fitness journey
             </p>
           </div>
@@ -102,11 +104,11 @@ export default function SignupForm() {
                 value.length < 3 ? "Name must be at least 3 characters" : null
               }
             >
-              <Label className="text-xs font-semibold text-[#2F3A2F]">
+              <Label className="text-xs font-semibold text-[#2F3A2F] dark:text-zinc-200">
                 Full Name
               </Label>
-              <Input placeholder="John Doe" className="mt-1 h-11" />
-              <FieldError className="text-xs text-red-500 mt-0.5" />
+              <Input placeholder="John Doe" className="mt-1 h-11 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100" />
+              <FieldError className="text-xs text-red-500 dark:text-red-400 mt-0.5" />
             </TextField>
 
             {/* Email */}
@@ -121,11 +123,11 @@ export default function SignupForm() {
                 return null;
               }}
             >
-              <Label className="text-xs font-semibold text-[#2F3A2F]">
+              <Label className="text-xs font-semibold text-[#2F3A2F] dark:text-zinc-200">
                 Email Address
               </Label>
-              <Input placeholder="john@example.com" className="mt-1 h-11" />
-              <FieldError className="text-xs text-red-500 mt-0.5" />
+              <Input placeholder="john@example.com" className="mt-1 h-11 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100" />
+              <FieldError className="text-xs text-red-500 dark:text-red-400 mt-0.5" />
             </TextField>
 
             {/* Password */}
@@ -140,33 +142,33 @@ export default function SignupForm() {
                 return null;
               }}
             >
-              <Label className="text-xs font-semibold text-[#2F3A2F]">
+              <Label className="text-xs font-semibold text-[#2F3A2F] dark:text-zinc-200">
                 Password
               </Label>
-              <Input placeholder="Enter password" className="mt-1 h-11" />
-              <Description className="text-[11px] text-[#5D6B57]/70 mt-0.5">
+              <Input placeholder="Enter password" className="mt-1 h-11 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100" />
+              <Description className="text-[11px] text-[#5D6B57]/70 dark:text-zinc-400 mt-0.5">
                 8+ chars, 1 uppercase, 1 number
               </Description>
-              <FieldError className="text-xs text-red-500 mt-0.5" />
+              <FieldError className="text-xs text-red-500 dark:text-red-400 mt-0.5" />
             </TextField>
 
             {/* Confirm Password */}
             <TextField isRequired name="confirmPassword" type="password">
-              <Label className="text-xs font-semibold text-[#2F3A2F]">
+              <Label className="text-xs font-semibold text-[#2F3A2F] dark:text-zinc-200">
                 Confirm Password
               </Label>
-              <Input placeholder="Re-enter password" className="mt-1 h-11" />
-              <FieldError className="text-xs text-red-500 mt-0.5" />
+              <Input placeholder="Re-enter password" className="mt-1 h-11 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100" />
+              <FieldError className="text-xs text-red-500 dark:text-red-400 mt-0.5" />
             </TextField>
           </Form>
         </div>
 
         {/* RIGHT COLUMN: Profile details, terms, and Actions */}
-        <div className="p-8 lg:p-10 flex flex-col justify-between bg-white/20 backdrop-blur-md">
+        <div className="p-8 lg:p-10 flex flex-col justify-between bg-white/20 dark:bg-zinc-900/20 backdrop-blur-md">
           <div className="flex flex-col gap-5">
             {/* Role Selector */}
             <div className="space-y-2">
-              <span className="text-xs font-semibold text-[#2F3A2F] block">
+              <span className="text-xs font-semibold text-[#2F3A2F] dark:text-zinc-200 block">
                 Select Role
               </span>
               <div className="grid grid-cols-2 gap-3">
@@ -177,7 +179,7 @@ export default function SignupForm() {
                   className={`rounded-xl border h-12 text-sm transition font-medium tracking-wide shadow-sm ${
                     role === "member"
                       ? "border-[#6B8E23] bg-[#6B8E23] text-white shadow-md shadow-[#6B8E23]/20"
-                      : "border-gray-300/70 bg-white/50 text-[#2F3A2F] hover:bg-white/80"
+                      : "border-gray-300/70 dark:border-zinc-800 bg-white/50 dark:bg-zinc-950/40 text-[#2F3A2F] dark:text-zinc-200 hover:bg-white/80 dark:hover:bg-zinc-900"
                   }`}
                 >
                   Member
@@ -189,14 +191,14 @@ export default function SignupForm() {
                   className={`rounded-xl border h-12 text-sm transition font-medium tracking-wide shadow-sm ${
                     role === "trainer"
                       ? "border-[#6B8E23] bg-[#6B8E23] text-white shadow-md shadow-[#6B8E23]/20"
-                      : "border-gray-300/70 bg-white/50 text-[#2F3A2F] hover:bg-white/80"
+                      : "border-gray-300/70 dark:border-zinc-800 bg-white/50 dark:bg-zinc-950/40 text-[#2F3A2F] dark:text-zinc-200 hover:bg-white/80 dark:hover:bg-zinc-900"
                   }`}
                 >
                   Trainer
                 </button>
               </div>
               {role === "trainer" && (
-                <p className="text-[11px] text-amber-700 font-medium bg-amber-500/10 p-2 rounded-lg border border-amber-500/20">
+                <p className="text-[11px] text-amber-700 dark:text-amber-400 font-medium bg-amber-500/10 dark:bg-amber-500/5 p-2 rounded-lg border border-amber-500/20 dark:border-amber-500/10">
                   Trainer accounts require admin approval.
                 </p>
               )}
@@ -209,38 +211,36 @@ export default function SignupForm() {
                 value={imageUrl}
                 onChange={setImageUrl}
               >
-                {/* Visual Label linked correctly inside the component wrapper */}
-                <Label className="text-xs font-semibold text-[#2F3A2F]">
+                <Label className="text-xs font-semibold text-[#2F3A2F] dark:text-zinc-200">
                   Profile Image URL
                 </Label>
                 <Input
                   placeholder="Select an image if or profile Image URL"
-                  className="h-11 mt-1"
+                  className="h-11 mt-1 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100"
                 />
               </TextField>
 
               {/* Preview Box */}
-              <div className="flex items-center gap-3 rounded-xl border border-white/40 bg-white/30 p-2 mt-2">
+              <div className="flex items-center gap-3 rounded-xl border border-white/40 dark:border-zinc-800 bg-white/30 dark:bg-zinc-950/40 p-2 mt-2">
                 <TextField>
-                <div className="h-12 w-12 rounded-xl bg-gray-200/50 border border-white/50 overflow-hidden flex items-center justify-center flex-shrink-0">
-                  {imageUrl ? (
-                    <Image
-                      src={imageUrl}
-                      alt="Avatar Preview"
-                      width={96} // Change to your desired pixel size (e.g., 40, 64, 96)
-                      height={96} // Must match width for a perfect square/circle
-                      className="object-cover"
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                      }}
-                    />
-                    
-                  ) : (
-                    <div className="h-6 w-6 rounded-full bg-gray-400/40" />
-                  )}
-                </div>
+                  <div className="h-12 w-12 rounded-xl bg-gray-200/50 dark:bg-zinc-900 border border-white/50 dark:border-zinc-800 overflow-hidden flex items-center justify-center flex-shrink-0">
+                    {imageUrl ? (
+                      <Image
+                        src={imageUrl}
+                        alt="Avatar Preview"
+                        width={96}
+                        height={96}
+                        className="object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    ) : (
+                      <div className="h-6 w-6 rounded-full bg-gray-400/40 dark:bg-zinc-700" />
+                    )}
+                  </div>
                 </TextField>
-                <span className="text-xs font-medium text-[#5D6B57]">
+                <span className="text-xs font-medium text-[#5D6B57] dark:text-zinc-400">
                   Avatar Preview
                 </span>
               </div>
@@ -251,7 +251,7 @@ export default function SignupForm() {
               <Checkbox
                 name="terms"
                 isRequired
-                className="text-xs text-[#5D6B57] font-medium"
+                className="text-xs text-[#5D6B57] dark:text-zinc-400 font-medium"
               >
                 I agree to Terms & Privacy Policy
               </Checkbox>
@@ -263,7 +263,7 @@ export default function SignupForm() {
             <Button
               form="signup-form"
               type="submit"
-              className="h-12 w-full rounded-xl bg-[#6B8E23] text-white hover:bg-[#5A7A1E] transition-all font-semibold text-sm shadow-md flex gap-2 items-center justify-center"
+              className="h-12 w-full rounded-xl bg-[#6B8E23] text-white hover:bg-[#5A7A1E] dark:hover:bg-zinc-700 transition-all font-semibold text-sm shadow-md flex gap-2 items-center justify-center"
             >
               <Check className="w-4 h-4" />
               Create Account
@@ -271,29 +271,29 @@ export default function SignupForm() {
 
             {/* Divider */}
             <div className="relative my-1 flex items-center w-full">
-              <div className="flex-grow border-t border-gray-300/50"></div>
-              <span className="mx-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+              <div className="flex-grow border-t border-gray-300/50 dark:border-zinc-800" />
+              <span className="mx-3 text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider">
                 OR
               </span>
-              <div className="flex-grow border-t border-gray-300/50"></div>
+              <div className="flex-grow border-t border-gray-300/50 dark:border-zinc-800" />
             </div>
 
             {/* Google Signup Button */}
             <Button
-            onClick={handleGoogleAuth}
+              onClick={handleGoogleAuth}
               variant="secondary"
               aria-label="Sign up with Google"
-              className="h-12 w-full rounded-xl border border-gray-300/70 bg-white/60 hover:bg-white/90 transition-all font-semibold text-sm text-[#2F3A2F]"
+              className="h-12 w-full rounded-xl border border-gray-300/70 dark:border-zinc-800 bg-white/60 dark:bg-zinc-950/40 hover:bg-white/90 dark:hover:bg-zinc-900 transition-all font-semibold text-sm text-[#2F3A2F] dark:text-zinc-200"
             >
               Sign up with Google
             </Button>
 
             {/* Login Navigation Link */}
-            <p className="text-center text-xs text-[#5D6B57] w-full mt-1">
+            <p className="text-center text-xs text-[#5D6B57] dark:text-zinc-400 w-full mt-1">
               Already have an account?{" "}
               <Link
                 href="/auth/signin"
-                className="font-bold text-[#6B8E23] hover:underline ml-1"
+                className="font-bold text-[#6B8E23] dark:text-zinc-300 hover:underline ml-1"
               >
                 Log In
               </Link>

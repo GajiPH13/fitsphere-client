@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useEffect } from "react";
@@ -24,9 +25,9 @@ export default function MemberSubscriptionPage() {
 
   if (isPending) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#EDF3E7]">
-        <div className="rounded-xl border border-white/40 bg-white/40 px-6 py-4 shadow-md backdrop-blur-md">
-          <p className="text-sm font-semibold text-[#2F3A2F] animate-pulse">Loading subscription...</p>
+      <div className="flex min-h-screen items-center justify-center bg-[#EDF3E7] dark:bg-zinc-950 transition-colors">
+        <div className="rounded-xl border border-white/40 dark:border-zinc-800 bg-white/40 dark:bg-zinc-900 px-6 py-4 shadow-md backdrop-blur-md">
+          <p className="text-sm font-semibold text-[#2F3A2F] dark:text-zinc-300 animate-pulse">Loading subscription...</p>
         </div>
       </div>
     );
@@ -38,14 +39,14 @@ export default function MemberSubscriptionPage() {
 
   if (role !== "member") {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#EDF3E7] px-4">
-        <div className="max-w-sm rounded-2xl border border-white/50 bg-white/60 p-6 text-center shadow-xl backdrop-blur-xl">
-          <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-red-100 text-red-600">
+      <main className="flex min-h-screen items-center justify-center bg-[#EDF3E7] dark:bg-zinc-950 px-4 transition-colors">
+        <div className="max-w-sm rounded-2xl border border-white/50 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900 p-6 text-center shadow-xl backdrop-blur-xl">
+          <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-950/30 text-red-600 dark:text-red-400">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-5 w-5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z" />
             </svg>
           </div>
-          <h1 className="text-xl font-black tracking-tight text-[#2F3A2F]">Access Denied</h1>
+          <h1 className="text-xl font-black tracking-tight text-[#2F3A2F] dark:text-zinc-50">Access Denied</h1>
           <p className="mt-1.5 text-xs font-medium text-[#5D6B57]">Only members can view subscription details.</p>
         </div>
       </main>
@@ -77,36 +78,36 @@ export default function MemberSubscriptionPage() {
   ];
 
   return (
-    <main className="relative overflow-hidden min-h-screen bg-gradient-to-br from-[#EDF3E7] via-[#E4ECD9] to-[#D5E2C4] px-4 py-10 md:px-10 lg:px-16 antialiased">
+    <main className="relative overflow-hidden min-h-screen bg-gradient-to-br from-[#EDF3E7] via-[#E4ECD9] to-[#D5E2C4] dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 px-4 py-10 md:px-10 lg:px-16 antialiased transition-colors">
       
       {/* BACKGROUND GLOW SYSTEM */}
-      <div className="absolute top-1/4 left-1/3 h-72 w-72 rounded-full bg-gradient-to-tr from-[#6B8E23]/15 to-[#A3B18A]/25 blur-[70px] pointer-events-none" />
-      <div className="absolute bottom-12 right-1/4 h-64 w-64 rounded-full bg-[#5A7A1E]/10 blur-[60px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/3 h-72 w-72 rounded-full bg-gradient-to-tr from-[#6B8E23]/15 to-[#A3B18A]/25 dark:from-zinc-800/10 dark:to-zinc-700/10 blur-[70px] pointer-events-none" />
+      <div className="absolute bottom-12 right-1/4 h-64 w-64 rounded-full bg-[#5A7A1E]/10 dark:bg-zinc-800/5 blur-[60px] pointer-events-none" />
 
       <section className="relative mx-auto max-w-5xl z-10">
         
         {/* HEADER SECTION */}
         <div className="mb-6 space-y-1">
-          <span className="inline-flex items-center gap-1 rounded-full border border-white/60 bg-white/40 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-[#5A7A1E] backdrop-blur-md">
-            <span className="h-1 w-1 rounded-full bg-[#6B8E23]"></span>
+          <span className="inline-flex items-center gap-1 rounded-full border border-white/60 dark:border-zinc-700 bg-white/40 dark:bg-zinc-950 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-[#5A7A1E] dark:text-zinc-300 backdrop-blur-md">
+            <span className="h-1 w-1 rounded-full bg-[#6B8E23] dark:bg-zinc-400"></span>
             Billing Control
           </span>
-          <h1 className="text-2xl font-black tracking-tight text-[#2F3A2F]">My Subscription</h1>
-          <p className="text-xs font-medium text-[#5D6B57]/90">View your current tier and manage updates.</p>
+          <h1 className="text-2xl font-black tracking-tight text-[#2F3A2F] dark:text-zinc-50">My Subscription</h1>
+          <p className="text-xs font-medium text-[#5D6B57]/90 dark:text-zinc-400">View your current tier and manage updates.</p>
         </div>
 
         {/* OVERVIEW COMPACT GLASS CARD */}
-        <div className="group relative overflow-hidden mb-6 rounded-2xl border border-white/60 bg-white/35 p-5 shadow-md backdrop-blur-xl">
+        <div className="group relative overflow-hidden mb-6 rounded-2xl border border-white/60 dark:border-zinc-800 bg-white/35 dark:bg-zinc-900/90 p-5 shadow-md backdrop-blur-xl">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-[#6B8E23] bg-[#6B8E23]/10 px-2 py-0.5 rounded-md inline-block">Current Plan</p>
-              <h2 className="mt-1 text-2xl font-black capitalize tracking-tight text-[#2F3A2F]">{plan} Plan</h2>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#6B8E23] dark:text-zinc-300 bg-[#6B8E23]/10 dark:bg-zinc-800 px-2 py-0.5 rounded-md inline-block">Current Plan</p>
+              <h2 className="mt-1 text-2xl font-black capitalize tracking-tight text-[#2F3A2F] dark:text-zinc-100">{plan} Plan</h2>
             </div>
-            <div className="rounded-xl border border-white/40 bg-white/40 p-3 backdrop-blur-sm sm:text-right min-w-[160px]">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-[#5D6B57]">Subscription Status</p>
+            <div className="rounded-xl border border-white/40 dark:border-zinc-800 bg-white/40 dark:bg-zinc-950 p-3 backdrop-blur-sm sm:text-right min-w-[160px]">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#5D6B57] dark:text-zinc-500">Subscription Status</p>
               <div className="flex items-center gap-1.5 mt-0.5 sm:justify-end">
                 <span className={`h-1.5 w-1.5 rounded-full ${subscriptionStatus === "active" ? "bg-[#6B8E23]" : "bg-amber-500 animate-pulse"}`} />
-                <span className="text-sm font-black capitalize text-[#2F3A2F]">{subscriptionStatus}</span>
+                <span className="text-sm font-black capitalize text-[#2F3A2F] dark:text-zinc-200">{subscriptionStatus}</span>
               </div>
             </div>
           </div>
@@ -122,50 +123,50 @@ export default function MemberSubscriptionPage() {
                 key={item.key}
                 className={`group relative flex flex-col rounded-2xl border p-5 shadow-md backdrop-blur-xl transition-all duration-200 ${
                   isCurrentPlan
-                    ? "border-[#6B8E23] bg-gradient-to-br from-[#DDE5D0]/90 to-[#C9D6B8]/90 shadow-lg shadow-[#6B8E23]/5"
-                    : "border-white/60 bg-white/35 hover:bg-white/55"
+                    ? "border-[#6B8E23] dark:border-zinc-700 bg-gradient-to-br from-[#DDE5D0]/90 to-[#C9D6B8]/90 dark:from-zinc-900/90 dark:to-zinc-900/50 shadow-lg shadow-[#6B8E23]/5"
+                    : "border-white/60 dark:border-zinc-800 bg-white/35 dark:bg-zinc-950/40 hover:bg-white/55 dark:hover:bg-zinc-900/60"
                 }`}
               >
                 {isCurrentPlan && (
-                  <span className="absolute top-3 right-4 text-xs font-black text-[#6B8E23]/40 tracking-wider uppercase select-none pointer-events-none">Active</span>
+                  <span className="absolute top-3 right-4 text-xs font-black text-[#6B8E23]/40 dark:text-zinc-500 tracking-wider uppercase select-none pointer-events-none">Active</span>
                 )}
 
-                <h3 className="text-xl font-black tracking-tight text-[#2F3A2F]">{item.name}</h3>
-                <p className="mt-1 text-xs font-medium text-[#5D6B57]/90 leading-normal min-h-[32px]">{item.description}</p>
+                <h3 className="text-xl font-black tracking-tight text-[#2F3A2F] dark:text-zinc-50">{item.name}</h3>
+                <p className="mt-1 text-xs font-medium text-[#5D6B57]/90 dark:text-zinc-400 leading-normal min-h-[32px]">{item.description}</p>
 
                 <div className="mt-3 flex items-baseline gap-0.5">
-                  <span className="text-2xl font-black tracking-tight text-[#2F3A2F]">{item.price}</span>
-                  {item.key !== "free" && <span className="text-[10px] font-bold text-[#5D6B57] uppercase tracking-wider">/mo</span>}
+                  <span className="text-2xl font-black tracking-tight text-[#2F3A2F] dark:text-zinc-100">{item.price}</span>
+                  {item.key !== "free" && <span className="text-[10px] font-bold text-[#5D6B57] dark:text-zinc-500 uppercase tracking-wider">/mo</span>}
                 </div>
 
                 {/* FEATURE ROWS */}
                 <ul className="mt-4 flex-1 space-y-2 text-xs font-medium text-[#4B5A42]">
                   {item.features.map((feature) => (
                     <li key={feature} className="flex items-center gap-2">
-                      <div className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[9px] ${isCurrentPlan ? "bg-[#6B8E23] text-white" : "bg-white text-[#6B8E23] shadow-sm"}`}>
+                      <div className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[9px] ${isCurrentPlan ? "bg-[#6B8E23] dark:bg-zinc-800 text-white dark:text-zinc-300" : "bg-white dark:bg-zinc-900 text-[#6B8E23] dark:text-zinc-400 shadow-sm border dark:border-zinc-800"}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="h-2.5 w-2.5">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                         </svg>
                       </div>
-                      <span className="text-[#2F3A2F]/90 text-[11px]">{feature}</span>
+                      <span className="text-[#2F3A2F]/90 dark:text-zinc-300 text-[11px]">{feature}</span>
                     </li>
                   ))}
                 </ul>
 
                 {/* ACTION LAYER BUTTONS */}
-                <div className="mt-4 pt-3 border-t border-white/20">
+                <div className="mt-4 pt-3 border-t border-white/20 dark:border-zinc-800">
                   {isCurrentPlan ? (
                     <button
                       type="button"
                       disabled
-                      className="flex w-full items-center justify-center rounded-xl bg-[#2F3A2F] py-2 text-xs font-bold text-white shadow-sm cursor-not-allowed select-none"
+                      className="flex w-full items-center justify-center rounded-xl bg-[#2F3A2F] dark:bg-zinc-800 py-2 text-xs font-bold text-white dark:text-zinc-400 shadow-sm cursor-not-allowed select-none"
                     >
                       Current Tier
                     </button>
                   ) : (
                     <Link
                       href="/priceing"
-                      className="group/btn flex w-full items-center justify-center gap-1 rounded-xl bg-gradient-to-r from-[#6B8E23] to-[#5A7A1E] py-2 text-xs font-bold text-white shadow-md transition-all duration-200 hover:opacity-95 active:scale-[0.99]"
+                      className="group/btn flex w-full items-center justify-center gap-1 rounded-xl bg-gradient-to-r from-[#6B8E23] to-[#5A7A1E] dark:from-zinc-800 dark:to-zinc-700 py-2 text-xs font-bold text-white dark:text-zinc-200 shadow-md transition-all duration-200 hover:opacity-95 active:scale-[0.99]"
                     >
                       Upgrade
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-3 w-3 transition-transform group-hover/btn:translate-x-0.5">

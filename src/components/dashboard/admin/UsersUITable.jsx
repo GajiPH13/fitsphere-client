@@ -205,8 +205,8 @@ export default function AdminUsersPage() {
 
   if (isPending || loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#EDF3E7]">
-        <div className="animate-pulse rounded-2xl border border-white/40 bg-white/30 px-6 py-4 font-semibold text-[#2F3A2F] shadow-xl backdrop-blur-md">
+      <div className="flex min-h-screen items-center justify-center bg-[#EDF3E7] dark:bg-[#101510]">
+        <div className="animate-pulse rounded-2xl border border-white/40 bg-white/30 px-6 py-4 font-semibold text-[#2F3A2F] shadow-xl backdrop-blur-md dark:border-white/10 dark:bg-white/10 dark:text-[#EDF3E7]">
           Loading users directory...
         </div>
       </div>
@@ -215,10 +215,12 @@ export default function AdminUsersPage() {
 
   if (role !== "admin") {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#EDF3E7] px-6 py-20">
-        <section className="w-full max-w-md rounded-[32px] border border-white/40 bg-white/30 p-8 text-center shadow-2xl backdrop-blur-xl">
-          <h1 className="text-3xl font-black text-[#2F3A2F]">Access Denied</h1>
-          <p className="mt-3 font-medium text-[#5D6B57]">
+      <main className="flex min-h-screen items-center justify-center bg-[#EDF3E7] px-6 py-20 dark:bg-[#101510]">
+        <section className="w-full max-w-md rounded-[32px] border border-white/40 bg-white/30 p-8 text-center shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-white/10">
+          <h1 className="text-3xl font-black text-[#2F3A2F] dark:text-[#EDF3E7]">
+            Access Denied
+          </h1>
+          <p className="mt-3 font-medium text-[#5D6B57] dark:text-[#B8C7AE]">
             Only admins can manage users.
           </p>
         </section>
@@ -228,8 +230,8 @@ export default function AdminUsersPage() {
 
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#EDF3E7]">
-        <div className="rounded-2xl border border-red-200/50 bg-red-50/40 px-6 py-4 font-semibold text-red-700 shadow-xl backdrop-blur-md">
+      <div className="flex min-h-screen items-center justify-center bg-[#EDF3E7] dark:bg-[#101510]">
+        <div className="rounded-2xl border border-red-200/50 bg-red-50/40 px-6 py-4 font-semibold text-red-700 shadow-xl backdrop-blur-md dark:border-red-400/20 dark:bg-red-500/10 dark:text-red-300">
           Error: {error}
         </div>
       </div>
@@ -237,34 +239,34 @@ export default function AdminUsersPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#EDF3E7] px-2 py-12 sm:px-4 md:px-6 lg:px-8">
-      <div className="pointer-events-none absolute left-10 top-10 h-72 w-72 rounded-full bg-white/30 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-10 right-10 h-96 w-96 rounded-full bg-white/20 blur-3xl" />
+    <main className="relative min-h-screen overflow-hidden bg-[#EDF3E7] px-2 py-12 dark:bg-[#101510] sm:px-4 md:px-6 lg:px-8">
+      <div className="pointer-events-none absolute left-10 top-10 h-72 w-72 rounded-full bg-white/30 blur-3xl dark:bg-[#A3B18A]/10" />
+      <div className="pointer-events-none absolute bottom-10 right-10 h-96 w-96 rounded-full bg-white/20 blur-3xl dark:bg-white/5" />
 
-      <section className="relative z-10 mx-auto w-full max-w-[1600px] rounded-[32px] border border-white/40 bg-white/20 p-4 shadow-[0_8px_32px_0_rgba(0,0,0,0.04)] backdrop-blur-xl sm:p-6 lg:p-8">
-        <div className="mb-8 border-b border-white/20 pb-6">
-          <span className="rounded-full bg-white/30 px-3 py-1 text-xs font-bold uppercase tracking-widest text-[#5D6B57] backdrop-blur-sm">
+      <section className="relative z-10 mx-auto w-full max-w-[1600px] rounded-[32px] border border-white/40 bg-white/20 p-4 shadow-[0_8px_32px_0_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/10 dark:bg-white/10 sm:p-6 lg:p-8">
+        <div className="mb-8 border-b border-white/20 pb-6 dark:border-white/10">
+          <span className="rounded-full bg-white/30 px-3 py-1 text-xs font-bold uppercase tracking-widest text-[#5D6B57] backdrop-blur-sm dark:bg-white/10 dark:text-[#B8C7AE]">
             Control Panel
           </span>
 
-          <h1 className="mt-3 text-3xl font-black tracking-tight text-[#2F3A2F] sm:text-4xl">
+          <h1 className="mt-3 text-3xl font-black tracking-tight text-[#2F3A2F] dark:text-[#EDF3E7] sm:text-4xl">
             User Management
           </h1>
 
-          <p className="mt-2 text-sm font-medium text-[#5D6B57]/90 sm:text-base">
+          <p className="mt-2 text-sm font-medium text-[#5D6B57]/90 dark:text-[#B8C7AE] sm:text-base">
             View active accounts, block/unblock validations, and reassign system
             roles instantly.
           </p>
         </div>
 
-        <div className="overflow-x-auto rounded-2xl border border-white/30 bg-white/10 shadow-inner backdrop-blur-md">
+        <div className="overflow-x-auto rounded-2xl border border-white/30 bg-white/10 shadow-inner backdrop-blur-md dark:border-white/10 dark:bg-white/5">
           <Table
-            className="w-full min-w-full table-fixed bg-transparent text-[#2F3A2F] shadow-none"
+            className="w-full min-w-full table-fixed bg-transparent text-[#2F3A2F] shadow-none dark:text-[#EDF3E7]"
             style={{ background: "transparent" }}
           >
             <Table.ScrollContainer className="overflow-visible">
               <Table.Content aria-label="User Management Table">
-                <Table.Header className="border-b border-white/30 bg-white/15">
+                <Table.Header className="border-b border-white/30 bg-white/15 dark:border-white/10 dark:bg-white/5">
                   <Table.Column
                     allowsSorting
                     isRowHeader
@@ -273,30 +275,30 @@ export default function AdminUsersPage() {
                     {({ sortDirection }) => (
                       <Table.SortableColumnHeader
                         sortDirection={sortDirection}
-                        className="p-4 text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80"
+                        className="p-4 text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 dark:text-[#EDF3E7]/80"
                       >
                         User / ID
                       </Table.SortableColumnHeader>
                     )}
                   </Table.Column>
 
-                  <Table.Column className="w-[24%] min-w-[150px] p-4 text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80">
+                  <Table.Column className="w-[24%] min-w-[150px] p-4 text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 dark:text-[#EDF3E7]/80">
                     Email
                   </Table.Column>
 
-                  <Table.Column className="w-[12%] min-w-[90px] p-4 text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80">
+                  <Table.Column className="w-[12%] min-w-[90px] p-4 text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 dark:text-[#EDF3E7]/80">
                     System Role
                   </Table.Column>
 
-                  <Table.Column className="w-[12%] min-w-[90px] p-4 text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80">
+                  <Table.Column className="w-[12%] min-w-[90px] p-4 text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 dark:text-[#EDF3E7]/80">
                     Current Plan
                   </Table.Column>
 
-                  <Table.Column className="w-[12%] min-w-[80px] p-4 text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80">
+                  <Table.Column className="w-[12%] min-w-[80px] p-4 text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 dark:text-[#EDF3E7]/80">
                     Status
                   </Table.Column>
 
-                  <Table.Column className="w-[18%] min-w-[150px] p-4 text-right text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80">
+                  <Table.Column className="w-[18%] min-w-[150px] p-4 text-right text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 dark:text-[#EDF3E7]/80">
                     Management Actions
                   </Table.Column>
                 </Table.Header>
@@ -310,35 +312,35 @@ export default function AdminUsersPage() {
                     return (
                       <Table.Row
                         key={item._id}
-                        className={`border-b border-white/15 transition-all duration-200 last:border-0 hover:bg-white/5 ${
+                        className={`border-b border-white/15 transition-all duration-200 last:border-0 hover:bg-white/5 dark:border-white/10 dark:hover:bg-white/10 ${
                           isActionLoading
                             ? "pointer-events-none opacity-50"
                             : ""
                         }`}
                       >
                         <Table.Cell className="overflow-hidden p-4">
-                          <p className="truncate text-sm font-bold text-[#2F3A2F]">
+                          <p className="truncate text-sm font-bold text-[#2F3A2F] dark:text-[#EDF3E7]">
                             {item.name || "Unnamed User"}
                           </p>
-                          <p className="mt-0.5 truncate font-mono text-[10px] text-[#5D6B57]/80">
+                          <p className="mt-0.5 truncate font-mono text-[10px] text-[#5D6B57]/80 dark:text-[#B8C7AE]/80">
                             ID: {item._id}
                           </p>
                         </Table.Cell>
 
                         <Table.Cell className="overflow-hidden p-4">
-                          <p className="truncate text-sm font-medium text-[#4B5A42]">
+                          <p className="truncate text-sm font-medium text-[#4B5A42] dark:text-[#B8C7AE]">
                             {item.email}
                           </p>
                         </Table.Cell>
 
                         <Table.Cell className="overflow-hidden p-4">
-                          <span className="inline-block max-w-full truncate rounded-xl border border-white/30 bg-white/20 px-2 py-0.5 text-xs font-bold capitalize text-[#4B5A42] shadow-sm backdrop-blur-sm">
+                          <span className="inline-block max-w-full truncate rounded-xl border border-white/30 bg-white/20 px-2 py-0.5 text-xs font-bold capitalize text-[#4B5A42] shadow-sm backdrop-blur-sm dark:border-white/10 dark:bg-white/10 dark:text-[#EDF3E7]">
                             {itemRole}
                           </span>
                         </Table.Cell>
 
                         <Table.Cell className="overflow-hidden p-4">
-                          <span className="inline-block max-w-full truncate rounded-xl border border-white/40 bg-white/40 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-[#5D6B57] shadow-sm">
+                          <span className="inline-block max-w-full truncate rounded-xl border border-white/40 bg-white/40 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-[#5D6B57] shadow-sm dark:border-white/10 dark:bg-white/10 dark:text-[#B8C7AE]">
                             {item.plan || "free"}
                           </span>
                         </Table.Cell>
@@ -347,8 +349,8 @@ export default function AdminUsersPage() {
                           <span
                             className={`inline-block max-w-full truncate rounded-xl border px-2 py-0.5 text-xs font-bold uppercase tracking-wider shadow-sm ${
                               status === "blocked"
-                                ? "border-red-500/20 bg-red-500/10 text-red-700"
-                                : "border-emerald-500/20 bg-emerald-500/10 text-emerald-700"
+                                ? "border-red-500/20 bg-red-500/10 text-red-700 dark:text-red-300"
+                                : "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
                             }`}
                           >
                             {status}
@@ -363,8 +365,8 @@ export default function AdminUsersPage() {
                               onClick={() => openBlockModal(item)}
                               className={`shrink-0 whitespace-nowrap rounded-full border px-2.5 py-1 text-[10px] font-bold tracking-wide shadow-sm transition-all active:scale-[0.97] disabled:opacity-40 ${
                                 status === "blocked"
-                                  ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20"
-                                  : "border-red-500/20 bg-red-500/10 text-red-700 hover:bg-red-500/20"
+                                  ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20 dark:text-emerald-300"
+                                  : "border-red-500/20 bg-red-500/10 text-red-700 hover:bg-red-500/20 dark:text-red-300"
                               }`}
                             >
                               {status === "blocked" ? "Unblock" : "Block"}
@@ -375,7 +377,7 @@ export default function AdminUsersPage() {
                                 type="button"
                                 disabled={isActionLoading}
                                 onClick={() => openRoleModal(item, "admin")}
-                                className="shrink-0 whitespace-nowrap rounded-full border border-[#2F3A2F]/20 bg-[#2F3A2F]/10 px-2.5 py-1 text-[10px] font-bold tracking-wide text-[#2F3A2F] shadow-sm transition-all hover:bg-[#2F3A2F]/20 active:scale-[0.97] disabled:opacity-40"
+                                className="shrink-0 whitespace-nowrap rounded-full border border-[#2F3A2F]/20 bg-[#2F3A2F]/10 px-2.5 py-1 text-[10px] font-bold tracking-wide text-[#2F3A2F] shadow-sm transition-all hover:bg-[#2F3A2F]/20 active:scale-[0.97] disabled:opacity-40 dark:border-white/10 dark:bg-white/10 dark:text-[#EDF3E7] dark:hover:bg-white/15"
                               >
                                 Admin
                               </button>
@@ -386,7 +388,7 @@ export default function AdminUsersPage() {
                                 type="button"
                                 disabled={isActionLoading}
                                 onClick={() => openRoleModal(item, "member")}
-                                className="shrink-0 whitespace-nowrap rounded-full border border-amber-500/20 bg-amber-500/10 px-2.5 py-1 text-[10px] font-bold tracking-wide text-amber-700 shadow-sm transition-all hover:bg-amber-500/20 active:scale-[0.97] disabled:opacity-40"
+                                className="shrink-0 whitespace-nowrap rounded-full border border-amber-500/20 bg-amber-500/10 px-2.5 py-1 text-[10px] font-bold tracking-wide text-amber-700 shadow-sm transition-all hover:bg-amber-500/20 active:scale-[0.97] disabled:opacity-40 dark:text-amber-300"
                               >
                                 Demote
                               </button>
@@ -402,7 +404,7 @@ export default function AdminUsersPage() {
 
             <Table.Footer>
               {users.length === 0 && (
-                <div className="p-8 text-center text-sm font-medium text-[#5D6B57]">
+                <div className="p-8 text-center text-sm font-medium text-[#5D6B57] dark:text-[#B8C7AE]">
                   No accounts found inside the system index.
                 </div>
               )}
@@ -413,23 +415,23 @@ export default function AdminUsersPage() {
 
       {confirmOpen && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
+          <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl dark:border dark:border-white/10 dark:bg-[#151b14]">
             <h2
               className={`text-2xl font-black ${
                 confirmAction?.type === "status" &&
                 confirmAction?.nextStatus === "blocked"
-                  ? "text-red-600"
-                  : "text-[#2F3A2F]"
+                  ? "text-red-600 dark:text-red-300"
+                  : "text-[#2F3A2F] dark:text-[#EDF3E7]"
               }`}
             >
               {confirmAction?.title}
             </h2>
 
-            <p className="mt-4 text-sm leading-6 text-[#4B5A42]">
+            <p className="mt-4 text-sm leading-6 text-[#4B5A42] dark:text-[#B8C7AE]">
               {confirmAction?.message}
             </p>
 
-            <p className="mt-2 text-xs text-gray-500">
+            <p className="mt-2 text-xs text-gray-500 dark:text-white/50">
               Please confirm before continuing.
             </p>
 

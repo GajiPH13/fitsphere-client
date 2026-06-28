@@ -39,8 +39,8 @@ export default function ApplyTrainerPage() {
 
   if (isPending) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#EDF3E7]">
-        <p className="rounded-2xl border border-white/40 bg-white/30 px-6 py-4 font-medium text-[#2F3A2F] shadow-lg backdrop-blur-md animate-pulse">
+      <div className="flex min-h-screen items-center justify-center bg-[#EDF3E7] dark:bg-zinc-950 transition-colors">
+        <p className="rounded-2xl border border-white/40 dark:border-zinc-800 bg-white/30 dark:bg-zinc-900 px-6 py-4 font-medium text-[#2F3A2F] dark:text-zinc-300 shadow-lg backdrop-blur-md animate-pulse">
           Checking user credentials...
         </p>
       </div>
@@ -53,10 +53,10 @@ export default function ApplyTrainerPage() {
 
   if (role !== "member") {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#EDF3E7] px-6 py-20">
-        <section className="max-w-md w-full rounded-[32px] border border-white/40 bg-white/30 p-8 text-center shadow-xl backdrop-blur-xl">
-          <h1 className="text-3xl font-bold text-[#2F3A2F]">Access Denied</h1>
-          <p className="mt-3 text-[#5D6B57]">
+      <main className="flex min-h-screen items-center justify-center bg-[#EDF3E7] dark:bg-zinc-950 px-6 py-20 transition-colors">
+        <section className="max-w-md w-full rounded-[32px] border border-white/40 dark:border-zinc-800 bg-white/30 dark:bg-zinc-900 p-8 text-center shadow-xl backdrop-blur-xl">
+          <h1 className="text-3xl font-bold text-[#2F3A2F] dark:text-zinc-50">Access Denied</h1>
+          <p className="mt-3 text-[#5D6B57] dark:text-zinc-400">
             Only members can apply to become trainers.
           </p>
         </section>
@@ -164,42 +164,42 @@ export default function ApplyTrainerPage() {
   };
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#EDF3E7] px-4 py-12 sm:px-6 md:px-12 lg:px-20">
-      <div className="pointer-events-none absolute left-1/3 top-1/4 h-80 w-80 rounded-full bg-white/20 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-1/4 right-1/3 h-96 w-96 rounded-full bg-white/15 blur-3xl" />
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#EDF3E7] dark:bg-gradient-to-br dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 px-4 py-12 transition-colors sm:px-6 md:px-12 lg:px-20">
+      <div className="pointer-events-none absolute left-1/3 top-1/4 h-80 w-80 rounded-full bg-white/20 dark:bg-zinc-800/10 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-1/4 right-1/3 h-96 w-96 rounded-full bg-white/15 dark:bg-zinc-800/5 blur-3xl" />
 
-      <section className="relative z-10 grid w-full max-w-5xl grid-cols-1 overflow-hidden rounded-[32px] border border-white/40 bg-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.05)] backdrop-blur-xl lg:grid-cols-12">
-        <div className="flex flex-col justify-between border-b border-white/20 bg-white/5 p-6 sm:p-10 lg:col-span-5 lg:border-b-0 lg:border-r lg:p-12">
+      <section className="relative z-10 grid w-full max-w-5xl grid-cols-1 overflow-hidden rounded-[32px] border border-white/40 dark:border-zinc-800 bg-white/20 dark:bg-zinc-900/90 shadow-[0_8px_32px_0_rgba(0,0,0,0.05)] backdrop-blur-xl lg:grid-cols-12">
+        <div className="flex flex-col justify-between border-b border-white/20 dark:border-zinc-800 bg-white/5 dark:bg-zinc-950/40 p-6 sm:p-10 lg:col-span-5 lg:border-b-0 lg:border-r lg:p-12">
           <div>
-            <span className="rounded-full bg-white/30 px-3 py-1 text-xs font-bold uppercase tracking-widest text-[#5D6B57] backdrop-blur-sm">
+            <span className="rounded-full bg-white/30 dark:bg-zinc-800 px-3 py-1 text-xs font-bold uppercase tracking-widest text-[#5D6B57] dark:text-zinc-300 backdrop-blur-sm">
               Join Our Team
             </span>
 
-            <h1 className="mt-4 text-3xl font-black leading-tight tracking-tight text-[#2F3A2F] sm:text-4xl">
+            <h1 className="mt-4 text-3xl font-black leading-tight tracking-tight text-[#2F3A2F] dark:text-zinc-50 sm:text-4xl">
               Apply to Become a Trainer
             </h1>
 
-            <p className="mt-3 text-sm font-medium text-[#5D6B57]/90 sm:text-base">
+            <p className="mt-3 text-sm font-medium text-[#5D6B57]/90 dark:text-zinc-400 sm:text-base">
               Share your experience, specialties, and certifications with our
               administration team.
             </p>
           </div>
 
-          <div className="mt-10 rounded-2xl border border-white/30 bg-white/10 p-5 shadow-sm backdrop-blur-md lg:mt-0">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-[#2F3A2F]/60">
+          <div className="mt-10 rounded-2xl border border-white/30 dark:border-zinc-800 bg-white/10 dark:bg-zinc-950 p-5 shadow-sm backdrop-blur-md lg:mt-0">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-[#2F3A2F]/60 dark:text-zinc-400">
               Applicant Profile
             </p>
 
             <div className="mt-3 flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/40 bg-[#2F3A2F]/10 text-lg font-bold text-[#2F3A2F] shadow-inner">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/40 dark:border-zinc-700 bg-[#2F3A2F]/10 dark:bg-zinc-800 text-lg font-bold text-[#2F3A2F] dark:text-zinc-200 shadow-inner">
                 {user.name ? user.name.charAt(0).toUpperCase() : "M"}
               </div>
 
               <div className="min-w-0">
-                <p className="truncate text-base font-bold text-[#2F3A2F]">
+                <p className="truncate text-base font-bold text-[#2F3A2F] dark:text-zinc-100">
                   {user.name}
                 </p>
-                <p className="truncate text-xs font-medium text-[#5D6B57]">
+                <p className="truncate text-xs font-medium text-[#5D6B57] dark:text-zinc-400">
                   {user.email}
                 </p>
               </div>
@@ -207,10 +207,10 @@ export default function ApplyTrainerPage() {
           </div>
         </div>
 
-        <div className="bg-white/10 p-6 sm:p-10 lg:col-span-7 lg:p-12">
+        <div className="bg-white/10 dark:bg-zinc-900/40 p-6 sm:p-10 lg:col-span-7 lg:p-12">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-[#2F3A2F]">
+              <label className="block text-sm font-semibold text-[#2F3A2F] dark:text-zinc-300">
                 Upload Verification Image
               </label>
 
@@ -218,20 +218,20 @@ export default function ApplyTrainerPage() {
                 type="file"
                 accept="image/*"
                 onChange={handleImageUpload}
-                className="w-full rounded-2xl border border-white/40 bg-white/10 p-2 text-sm text-[#2F3A2F] backdrop-blur-sm file:mr-4 file:cursor-pointer file:rounded-xl file:border-0 file:bg-[#2F3A2F] file:px-4 file:py-2 file:text-xs file:font-bold file:text-[#EDF3E7] file:transition-all hover:file:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#5D6B57]/20"
+                className="w-full rounded-2xl border border-white/40 dark:border-zinc-700 bg-white/10 dark:bg-zinc-950 p-2 text-sm text-[#2F3A2F] dark:text-zinc-200 backdrop-blur-sm file:mr-4 file:cursor-pointer file:rounded-xl file:border-0 file:bg-[#2F3A2F] dark:file:bg-zinc-800 file:px-4 file:py-2 file:text-xs file:font-bold file:text-[#EDF3E7] dark:file:text-zinc-100 file:transition-all hover:file:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#5D6B57]/20 dark:focus:ring-zinc-700"
               />
 
               {uploading && (
                 <div className="mt-2 flex items-center gap-2 px-1">
-                  <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#5D6B57] border-t-transparent" />
-                  <p className="text-xs font-medium text-[#5D6B57]">
+                  <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#5D6B57] dark:border-zinc-400 border-t-transparent" />
+                  <p className="text-xs font-medium text-[#5D6B57] dark:text-zinc-400">
                     Uploading attachment...
                   </p>
                 </div>
               )}
 
               {imageUrl && (
-                <div className="mt-3 inline-block rounded-2xl border border-white/50 bg-white/10 p-2 shadow-sm backdrop-blur-md">
+                <div className="mt-3 inline-block rounded-2xl border border-white/50 dark:border-zinc-700 bg-white/10 dark:bg-zinc-950 p-2 shadow-sm backdrop-blur-md">
                   <div className="relative h-28 w-28 overflow-hidden rounded-xl">
                     <Image
                       src={imageUrl}
@@ -241,7 +241,7 @@ export default function ApplyTrainerPage() {
                       className="h-full w-full object-cover"
                     />
                   </div>
-                  <p className="mt-1 text-center text-[10px] font-bold text-[#2F3A2F]/70">
+                  <p className="mt-1 text-center text-[10px] font-bold text-[#2F3A2F]/70 dark:text-zinc-400">
                     Uploaded Image
                   </p>
                 </div>
@@ -256,7 +256,7 @@ export default function ApplyTrainerPage() {
                 onChange={handleChange}
                 placeholder="Experience, e.g. 3 years as a fitness coach"
                 required
-                className="w-full rounded-xl border border-white/40 bg-white/10 p-3.5 text-sm text-[#2F3A2F] placeholder-[#5D6B57]/60 outline-none backdrop-blur-sm transition-all focus:border-white/60 focus:bg-white/20 focus:ring-4 focus:ring-white/5"
+                className="w-full rounded-xl border border-white/40 dark:border-zinc-700 bg-white/10 dark:bg-zinc-950 p-3.5 text-sm text-[#2F3A2F] dark:text-zinc-50 placeholder-[#5D6B57]/60 dark:placeholder-zinc-500 outline-none backdrop-blur-sm transition-all focus:border-white/60 dark:focus:border-zinc-500 focus:bg-white/20 dark:focus:bg-zinc-950 focus:ring-4 focus:ring-white/5 dark:focus:ring-zinc-800/50"
               />
 
               <input
@@ -266,7 +266,7 @@ export default function ApplyTrainerPage() {
                 onChange={handleChange}
                 placeholder="Skills, e.g. Yoga, HIIT, Strength Training"
                 required
-                className="w-full rounded-xl border border-white/40 bg-white/10 p-3.5 text-sm text-[#2F3A2F] placeholder-[#5D6B57]/60 outline-none backdrop-blur-sm transition-all focus:border-white/60 focus:bg-white/20 focus:ring-4 focus:ring-white/5"
+                className="w-full rounded-xl border border-white/40 dark:border-zinc-700 bg-white/10 dark:bg-zinc-950 p-3.5 text-sm text-[#2F3A2F] dark:text-zinc-50 placeholder-[#5D6B57]/60 dark:placeholder-zinc-500 outline-none backdrop-blur-sm transition-all focus:border-white/60 dark:focus:border-zinc-500 focus:bg-white/20 dark:focus:bg-zinc-950 focus:ring-4 focus:ring-white/5 dark:focus:ring-zinc-800/50"
               />
 
               <input
@@ -276,7 +276,7 @@ export default function ApplyTrainerPage() {
                 onChange={handleChange}
                 placeholder="Certification, e.g. ACE Certified Personal Trainer"
                 required
-                className="w-full rounded-xl border border-white/40 bg-white/10 p-3.5 text-sm text-[#2F3A2F] placeholder-[#5D6B57]/60 outline-none backdrop-blur-sm transition-all focus:border-white/60 focus:bg-white/20 focus:ring-4 focus:ring-white/5"
+                className="w-full rounded-xl border border-white/40 dark:border-zinc-700 bg-white/10 dark:bg-zinc-950 p-3.5 text-sm text-[#2F3A2F] dark:text-zinc-50 placeholder-[#5D6B57]/60 dark:placeholder-zinc-500 outline-none backdrop-blur-sm transition-all focus:border-white/60 dark:focus:border-zinc-500 focus:bg-white/20 dark:focus:bg-zinc-950 focus:ring-4 focus:ring-white/5 dark:focus:ring-zinc-800/50"
               />
 
               <textarea
@@ -284,16 +284,16 @@ export default function ApplyTrainerPage() {
                 value={formData.bio}
                 onChange={handleChange}
                 placeholder="Write a short bio about yourself..."
-                rows="4"
+                rows={4}
                 required
-                className="w-full resize-none rounded-xl border border-white/40 bg-white/10 p-3.5 text-sm text-[#2F3A2F] placeholder-[#5D6B57]/60 outline-none backdrop-blur-sm transition-all focus:border-white/60 focus:bg-white/20 focus:ring-4 focus:ring-white/5"
+                className="w-full resize-none rounded-xl border border-white/40 dark:border-zinc-700 bg-white/10 dark:bg-zinc-950 p-3.5 text-sm text-[#2F3A2F] dark:text-zinc-50 placeholder-[#5D6B57]/60 dark:placeholder-zinc-500 outline-none backdrop-blur-sm transition-all focus:border-white/60 dark:focus:border-zinc-500 focus:bg-white/20 dark:focus:bg-zinc-950 focus:ring-4 focus:ring-white/5 dark:focus:ring-zinc-800/50"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading || uploading}
-              className="mt-2 w-full cursor-pointer rounded-xl bg-[#6B8E23] py-3.5 text-sm font-semibold text-[#EDF3E7] shadow-md transition-all hover:bg-[#2F3A2F]/90 active:scale-[0.995] disabled:cursor-not-allowed disabled:opacity-40 disabled:scale-100"
+              className="mt-2 w-full cursor-pointer rounded-xl bg-[#6B8E23] dark:bg-zinc-800 py-3.5 text-sm font-semibold text-[#EDF3E7] dark:text-zinc-100 shadow-md transition-all hover:bg-[#2F3A2F]/90 dark:hover:bg-zinc-700 active:scale-[0.995] disabled:cursor-not-allowed disabled:opacity-40 disabled:scale-100"
             >
               {loading ? "Submitting Application..." : "Submit Application"}
             </button>

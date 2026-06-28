@@ -6,7 +6,7 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import {  Button } from "@heroui/react";
+import { Button } from "@heroui/react";
 
 export default function AdminClassesPage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -153,14 +153,14 @@ export default function AdminClassesPage() {
   }, [API_URL, user, role, isPending, router]);
 
   if (isPending || loading) {
-    return <p className="p-10 text-center">Loading classes...</p>;
+    return <p className="p-10 text-center text-zinc-600 dark:text-zinc-400">Loading classes...</p>;
   }
 
   if (role !== "admin") {
     return (
-      <main className="min-h-screen bg-[#EDF3E7] px-6 py-20 text-center">
-        <h1 className="text-3xl font-bold text-[#2F3A2F]">Access Denied</h1>
-        <p className="mt-3 text-[#5D6B57]">Only admins can manage classes.</p>
+      <main className="min-h-screen bg-[#EDF3E7] dark:bg-zinc-950 px-6 py-20 text-center transition-colors">
+        <h1 className="text-3xl font-bold text-[#2F3A2F] dark:text-zinc-100">Access Denied</h1>
+        <p className="mt-3 text-[#5D6B57] dark:text-zinc-400">Only admins can manage classes.</p>
       </main>
     );
   }
@@ -170,23 +170,23 @@ export default function AdminClassesPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#EDF3E7] px-6 py-12 md:px-16 lg:px-24">
-      <section className="mx-auto max-w-7xl rounded-[36px] border border-white/40 bg-white/70 p-8 shadow-2xl backdrop-blur-2xl">
+    <main className="min-h-screen bg-[#EDF3E7] dark:bg-zinc-950 px-6 py-12 transition-colors md:px-16 lg:px-24">
+      <section className="mx-auto max-w-7xl rounded-[36px] border border-white/40 dark:border-zinc-800/40 bg-white/70 dark:bg-zinc-900/70 p-8 shadow-2xl backdrop-blur-2xl">
         <div className="mb-10">
-          <h1 className="text-4xl font-black text-[#2F3A2F]">
+          <h1 className="text-4xl font-black text-[#2F3A2F] dark:text-zinc-100">
             Class Management
           </h1>
-          <p className="mt-2 text-[#5D6B57]">
+          <p className="mt-2 text-[#5D6B57] dark:text-zinc-400">
             Review, approve, reject, or delete fitness classes.
           </p>
         </div>
 
         {classes.length === 0 ? (
-          <div className="rounded-3xl border border-[#A3B18A]/40 bg-white/60 p-10 text-center">
-            <h2 className="text-2xl font-bold text-[#2F3A2F]">
+          <div className="rounded-3xl border border-[#A3B18A]/40 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/60 p-10 text-center">
+            <h2 className="text-2xl font-bold text-[#2F3A2F] dark:text-zinc-100">
               No classes found
             </h2>
-            <p className="mt-2 text-[#5D6B57]">
+            <p className="mt-2 text-[#5D6B57] dark:text-zinc-400">
               Classes will appear here after trainers create them.
             </p>
           </div>
@@ -195,9 +195,9 @@ export default function AdminClassesPage() {
             {classes.map((item) => (
               <article
                 key={item._id}
-                className="grid gap-5 rounded-[28px] border border-white/50 bg-white/70 p-5 shadow-lg backdrop-blur-xl md:grid-cols-[180px_1fr_auto]"
+                className="grid gap-5 rounded-[28px] border border-white/50 dark:border-zinc-800/50 bg-white/70 dark:bg-zinc-900/70 p-5 shadow-lg backdrop-blur-xl md:grid-cols-[180px_1fr_auto]"
               >
-                <div className="relative h-36 overflow-hidden rounded-3xl bg-[#DDE5D0]">
+                <div className="relative h-36 overflow-hidden rounded-3xl bg-[#DDE5D0] dark:bg-zinc-800">
                   {item.image ? (
                     <Image
                       src={item.image}
@@ -206,7 +206,7 @@ export default function AdminClassesPage() {
                       className="object-cover"
                     />
                   ) : (
-                    <div className="flex h-full items-center justify-center text-[#556B2F]">
+                    <div className="flex h-full items-center justify-center text-[#556B2F] dark:text-zinc-400">
                       No Image
                     </div>
                   )}
@@ -217,37 +217,37 @@ export default function AdminClassesPage() {
                     <span
                       className={`rounded-full px-3 py-1 text-xs font-bold capitalize ${
                         item.status === "approved"
-                          ? "bg-green-100 text-green-700"
+                          ? "bg-green-100 dark:bg-green-950/50 text-green-700 dark:text-green-400"
                           : item.status === "rejected"
-                            ? "bg-red-100 text-red-700"
-                            : "bg-yellow-100 text-yellow-700"
+                            ? "bg-red-100 dark:bg-red-950/50 text-red-700 dark:text-red-400"
+                            : "bg-yellow-100 dark:bg-yellow-950/50 text-yellow-700 dark:text-yellow-400"
                       }`}
                     >
                       {item.status || "pending"}
                     </span>
 
-                    <span className="rounded-full bg-[#DDE5D0] px-3 py-1 text-xs font-bold text-[#556B2F]">
+                    <span className="rounded-full bg-[#DDE5D0] dark:bg-zinc-800 px-3 py-1 text-xs font-bold text-[#556B2F] dark:text-zinc-300">
                       {item.category || "General"}
                     </span>
 
-                    <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-[#5D6B57]">
+                    <span className="rounded-full bg-white dark:bg-zinc-800 px-3 py-1 text-xs font-bold text-[#5D6B57] dark:text-zinc-400 border border-transparent dark:border-zinc-700">
                       {item.level}
                     </span>
                   </div>
 
-                  <h2 className="mt-4 text-2xl font-bold text-[#2F3A2F]">
+                  <h2 className="mt-4 text-2xl font-bold text-[#2F3A2F] dark:text-zinc-100">
                     {item.title}
                   </h2>
 
-                  <p className="mt-1 text-sm text-[#5D6B57]">
+                  <p className="mt-1 text-sm text-[#5D6B57] dark:text-zinc-400">
                     Trainer: {item.trainer || item.trainerName || "Unknown"}
                   </p>
 
-                  <p className="mt-3 line-clamp-2 text-sm leading-6 text-[#4B5A42]">
+                  <p className="mt-3 line-clamp-2 text-sm leading-6 text-[#4B5A42] dark:text-zinc-300">
                     {item.description}
                   </p>
 
-                  <div className="mt-4 flex flex-wrap gap-3 text-xs font-semibold text-[#5D6B57]">
+                  <div className="mt-4 flex flex-wrap gap-3 text-xs font-semibold text-[#5D6B57] dark:text-zinc-400">
                     <span>Duration: {item.duration}</span>
                     <span>Capacity: {item.capacity}</span>
                     <span>Price: ${item.price || 0}</span>
@@ -287,46 +287,48 @@ export default function AdminClassesPage() {
           </div>
         )}
       </section>
-     {isOpen && (
-  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
-    <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
-      <h2 className="text-2xl font-black text-red-600">Delete Class</h2>
 
-      <p className="mt-4 text-[#4B5A42]">
-        Are you sure you want to delete{" "}
-        <span className="font-bold text-[#2F3A2F]">
-          {selectedClass?.title}
-        </span>
-        ?
-      </p>
+      {isOpen && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-3xl bg-white dark:bg-zinc-900 p-6 shadow-2xl border border-transparent dark:border-zinc-800">
+            <h2 className="text-2xl font-black text-red-600 dark:text-red-500">Delete Class</h2>
 
-      <p className="mt-2 text-sm text-gray-500">
-        This action cannot be undone.
-      </p>
+            <p className="mt-4 text-[#4B5A42] dark:text-zinc-300">
+              Are you sure you want to delete{" "}
+              <span className="font-bold text-[#2F3A2F] dark:text-zinc-100">
+                {selectedClass?.title}
+              </span>
+              ?
+            </p>
 
-      <div className="mt-6 flex justify-end gap-3">
-        <Button
-          variant="bordered"
-          onPress={() => {
-            setIsOpen(false);
-            setSelectedClass(null);
-          }}
-          isDisabled={deleteLoading}
-        >
-          Cancel
-        </Button>
+            <p className="mt-2 text-sm text-gray-500 dark:text-zinc-400">
+              This action cannot be undone.
+            </p>
 
-        <Button
-          color="danger"
-          onPress={handleDeleteClass}
-          isDisabled={deleteLoading}
-        >
-          {deleteLoading ? "Deleting..." : "Delete"}
-        </Button>
-      </div>
-    </div>
-  </div>
-)}
+            <div className="mt-6 flex justify-end gap-3">
+              <Button
+                variant="bordered"
+                onPress={() => {
+                  setIsOpen(false);
+                  setSelectedClass(null);
+                }}
+                isDisabled={deleteLoading}
+                className="dark:border-zinc-700 dark:text-zinc-300"
+              >
+                Cancel
+              </Button>
+
+              <Button
+                color="danger"
+                onPress={handleDeleteClass}
+                isDisabled={deleteLoading}
+              >
+                {deleteLoading ? "Deleting..." : "Delete"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
