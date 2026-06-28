@@ -144,7 +144,7 @@ export default function LatestForumPosts() {
     justify-center
     gap-3
     rounded-full
-    bg-gradient-to-r
+    bg-linear-to-r
     from-[#6B8E23]
     to-[#5A7A1E]
     px-8

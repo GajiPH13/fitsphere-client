@@ -1,10 +1,15 @@
+
 "use client";
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { Button } from "@heroui/react";
+import toast from "react-hot-toast";
 
 export default function ManageForumPostsPage() {
+  const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -13,18 +18,21 @@ export default function ManageForumPostsPage() {
   const role = user?.role;
   const userId = user?.id;
 
+  const isAllowed = role === "trainer" || role === "admin";
+
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState("");
-
-  const isAllowed = role === "trainer" || role === "admin";
 
   useEffect(() => {
     const fetchPosts = async () => {
       if (isPending) return;
 
       if (!user) {
-        window.location.href = "/auth/signin";
+        router.replace("/auth/signin");
         return;
       }
 
@@ -38,21 +46,77 @@ export default function ManageForumPostsPage() {
 
         const res = await fetch(`${API_URL}/api/forum-posts/author/${userId}`);
 
+        const data = await res.json();
+
         if (!res.ok) {
-          throw new Error("Failed to fetch forum posts");
+          throw new Error(data.message || "Failed to fetch forum posts");
         }
 
-        const data = await res.json();
-        setPosts(data);
+        setPosts(Array.isArray(data) ? data : data.posts || []);
       } catch (err) {
         setError(err.message);
+        toast.error(err.message || "Failed to fetch forum posts");
       } finally {
         setLoading(false);
       }
     };
 
     fetchPosts();
-  }, [API_URL, user, userId, isPending, isAllowed]);
+  }, [API_URL, user, userId, isPending, isAllowed, router]);
+
+  const openDeleteModal = (post) => {
+    setSelectedPost(post);
+    setIsOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setSelectedPost(null);
+    setIsOpen(false);
+  };
+
+  const handleDelete = async () => {
+    if (!selectedPost?._id) {
+      toast.error("No post selected.");
+      return;
+    }
+
+    setDeleteLoading(true);
+
+    const deletePromise = async () => {
+      const res = await fetch(`${API_URL}/api/forum-posts/${selectedPost._id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": user?.id,
+        },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to delete post.");
+      }
+
+      setPosts((prevPosts) =>
+        prevPosts.filter((post) => post._id !== selectedPost._id)
+      );
+
+      closeDeleteModal();
+
+      return "Post deleted successfully.";
+    };
+
+    try {
+      await toast.promise(deletePromise(), {
+        loading: "Deleting post...",
+        success: (message) => message,
+        error: (err) =>
+          err.message || "Something went wrong while deleting the post.",
+      });
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
 
   if (isPending || loading) {
     return (
@@ -80,34 +144,7 @@ export default function ManageForumPostsPage() {
       </main>
     );
   }
-  const handleDelete = async (postId) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this forum post?",
-    );
 
-    if (!confirmDelete) return;
-
-    try {
-      const res = await fetch(`${API_URL}/api/forum-posts/${postId}`, {
-        method: "DELETE",
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.message || "Failed to delete post.");
-        return;
-      }
-
-      // Remove deleted post from UI
-      setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
-
-      alert("Post deleted successfully.");
-    } catch (error) {
-      console.error("Delete error:", error);
-      alert("Something went wrong while deleting the post.");
-    }
-  };
   return (
     <main className="min-h-screen bg-[#EDF3E7] px-6 py-12 md:px-16 lg:px-24">
       <section className="mx-auto max-w-6xl rounded-[36px] border border-white/40 bg-white/70 p-8 shadow-2xl backdrop-blur-2xl">
@@ -123,16 +160,7 @@ export default function ManageForumPostsPage() {
 
           <Link
             href={`/dashboard/${role}/forum/create`}
-            className="inline-flex items-center justify-center
-  rounded-full
-  bg-[#6B8E23]
-  px-7 py-3
-  font-bold
-  text-[#2F3A2F]
-  border-2 border-[#4F6B1B]
-  shadow-xl
-  hover:bg-[#55741C]
-  transition-all"
+            className="inline-flex items-center justify-center rounded-full border-2 border-[#4F6B1B] bg-[#6B8E23] px-7 py-3 font-bold text-black shadow-xl transition-all hover:bg-[#55741C]"
           >
             Create New Post
           </Link>
@@ -179,7 +207,7 @@ export default function ManageForumPostsPage() {
                         : "bg-yellow-100 text-yellow-700"
                     }`}
                   >
-                    {post.status}
+                    {post.status || "draft"}
                   </span>
 
                   <div className="flex gap-3 md:justify-end">
@@ -191,7 +219,7 @@ export default function ManageForumPostsPage() {
                     </Link>
 
                     <button
-                      onClick={() => handleDelete(post._id)}
+                      onClick={() => openDeleteModal(post)}
                       type="button"
                       className="rounded-full bg-red-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-600"
                     >
@@ -204,6 +232,46 @@ export default function ManageForumPostsPage() {
           </div>
         )}
       </section>
+
+      {isOpen && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
+            <h2 className="text-2xl font-black text-red-600">
+              Delete Forum Post
+            </h2>
+
+            <p className="mt-4 text-[#4B5A42]">
+              Are you sure you want to delete{" "}
+              <span className="font-bold text-[#2F3A2F]">
+                {selectedPost?.title}
+              </span>
+              ?
+            </p>
+
+            <p className="mt-2 text-sm text-gray-500">
+              This action cannot be undone.
+            </p>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <Button
+                variant="bordered"
+                onPress={closeDeleteModal}
+                isDisabled={deleteLoading}
+              >
+                Cancel
+              </Button>
+
+              <Button
+                color="danger"
+                onPress={handleDelete}
+                isDisabled={deleteLoading}
+              >
+                {deleteLoading ? "Deleting..." : "Delete"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

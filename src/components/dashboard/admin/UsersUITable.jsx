@@ -1,9 +1,11 @@
+
 "use client";
 
 import React, { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-import { Table } from "@heroui/react";
+import { Table, Button } from "@heroui/react";
+import toast from "react-hot-toast";
 
 export default function AdminUsersPage() {
   const router = useRouter();
@@ -13,19 +15,21 @@ export default function AdminUsersPage() {
 
   const user = session?.user;
   const role = user?.role;
-  // const userId = user?.id;
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionLoadingId, setActionLoadingId] = useState(null);
   const [error, setError] = useState("");
 
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null);
+
   useEffect(() => {
     const fetchUsers = async () => {
       if (isPending) return;
 
       if (!user) {
-        router.push("/auth/signin");
+        router.replace("/auth/signin");
         return;
       }
 
@@ -37,23 +41,22 @@ export default function AdminUsersPage() {
       try {
         setLoading(true);
 
-        // const res = await fetch(`${API_URL}/api/users`);
         const res = await fetch(`${API_URL}/api/users`, {
           headers: {
             "x-user-id": user.id,
           },
         });
 
-       
-        
+        const data = await res.json();
+
         if (!res.ok) {
-          throw new Error("Failed to fetch users");
+          throw new Error(data.message || "Failed to fetch users");
         }
 
-        const data = await res.json();
-        setUsers(data);
+        setUsers(Array.isArray(data) ? data : data.users || []);
       } catch (err) {
         setError(err.message);
+        toast.error(err.message || "Failed to fetch users");
       } finally {
         setLoading(false);
       }
@@ -62,99 +65,148 @@ export default function AdminUsersPage() {
     fetchUsers();
   }, [API_URL, user, role, isPending, router]);
 
-  const handleBlockToggle = async (targetUser) => {
+  const openBlockModal = (targetUser) => {
     const nextStatus = targetUser.status === "blocked" ? "active" : "blocked";
 
-    const confirmAction = window.confirm(
-      `Are you sure you want to ${
+    setConfirmAction({
+      type: "status",
+      targetUser,
+      nextStatus,
+      title: nextStatus === "blocked" ? "Block User" : "Unblock User",
+      message: `Are you sure you want to ${
         nextStatus === "blocked" ? "block" : "unblock"
-      } this user?`,
-    );
+      } ${targetUser.name || targetUser.email}?`,
+      confirmText: nextStatus === "blocked" ? "Block" : "Unblock",
+    });
 
-    if (!confirmAction) return;
-
-    setActionLoadingId(targetUser._id);
-
-    try {
-      const res = await fetch(`${API_URL}/api/users/${targetUser._id}/block`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "x-user-id": user.id,
-        },
-        body: JSON.stringify({
-          status: nextStatus,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.message || "Failed to update user status");
-        return;
-      }
-
-      setUsers((prev) =>
-        prev.map((item) =>
-          item._id === targetUser._id ? { ...item, status: nextStatus } : item,
-        ),
-      );
-
-      alert(data.message);
-    } catch (error) {
-      console.error("Block toggle error:", error);
-      alert("Something went wrong.");
-    } finally {
-      setActionLoadingId(null);
-    }
+    setConfirmOpen(true);
   };
 
-  const handleRoleChange = async (targetUser, newRole) => {
-    const confirmAction = window.confirm(
-      `Are you sure you want to change this user's role to ${newRole}?`,
-    );
+  const openRoleModal = (targetUser, newRole) => {
+    setConfirmAction({
+      type: "role",
+      targetUser,
+      newRole,
+      title: "Change User Role",
+      message: `Are you sure you want to change ${
+        targetUser.name || targetUser.email
+      }'s role to ${newRole}?`,
+      confirmText: "Change Role",
+    });
 
-    if (!confirmAction) return;
+    setConfirmOpen(true);
+  };
 
+  const closeModal = () => {
+    setConfirmOpen(false);
+    setConfirmAction(null);
+  };
+
+  const handleConfirmAction = async () => {
+    if (!confirmAction?.targetUser?._id) {
+      toast.error("No user selected.");
+      return;
+    }
+
+    if (!user?.id) {
+      toast.error("Unauthorized. Admin user ID is missing.");
+      return;
+    }
+
+    const targetUser = confirmAction.targetUser;
     setActionLoadingId(targetUser._id);
 
-    try {
-      const res = await fetch(`${API_URL}/api/users/${targetUser._id}/role`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          role: newRole,
-        }),
-      });
+    if (confirmAction.type === "status") {
+      const updatePromise = async () => {
+        const res = await fetch(`${API_URL}/api/users/${targetUser._id}/block`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user-id": user.id,
+          },
+          body: JSON.stringify({
+            status: confirmAction.nextStatus,
+          }),
+        });
 
-      const data = await res.json();
+        const data = await res.json();
 
-      if (!res.ok) {
-        alert(data.message || "Failed to update user role");
-        return;
+        if (!res.ok) {
+          throw new Error(data.message || "Failed to update user status");
+        }
+
+        setUsers((prev) =>
+          prev.map((item) =>
+            item._id === targetUser._id
+              ? { ...item, status: confirmAction.nextStatus }
+              : item
+          )
+        );
+
+        closeModal();
+        return data.message || "User status updated successfully";
+      };
+
+      try {
+        await toast.promise(updatePromise(), {
+          loading: "Updating user status...",
+          success: (message) => message,
+          error: (err) => err.message || "Failed to update user status",
+        });
+      } finally {
+        setActionLoadingId(null);
       }
 
-      setUsers((prev) =>
-        prev.map((item) =>
-          item._id === targetUser._id ? { ...item, role: newRole } : item,
-        ),
-      );
+      return;
+    }
 
-      alert(data.message);
-    } catch (error) {
-      console.error("Role update error:", error);
-      alert("Something went wrong.");
-    } finally {
-      setActionLoadingId(null);
+    if (confirmAction.type === "role") {
+      const updatePromise = async () => {
+        const res = await fetch(`${API_URL}/api/users/${targetUser._id}/role`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user-id": user.id,
+          },
+          body: JSON.stringify({
+            role: confirmAction.newRole,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.message || "Failed to update user role");
+        }
+
+        setUsers((prev) =>
+          prev.map((item) =>
+            item._id === targetUser._id
+              ? { ...item, role: confirmAction.newRole }
+              : item
+          )
+        );
+
+        closeModal();
+        return data.message || "User role updated successfully";
+      };
+
+      try {
+        await toast.promise(updatePromise(), {
+          loading: "Updating user role...",
+          success: (message) => message,
+          error: (err) => err.message || "Failed to update user role",
+        });
+      } finally {
+        setActionLoadingId(null);
+      }
     }
   };
 
   if (isPending || loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#EDF3E7]">
-        <div className="rounded-2xl border border-white/40 bg-white/30 px-6 py-4 font-semibold text-[#2F3A2F] shadow-xl backdrop-blur-md animate-pulse">
+        <div className="animate-pulse rounded-2xl border border-white/40 bg-white/30 px-6 py-4 font-semibold text-[#2F3A2F] shadow-xl backdrop-blur-md">
           Loading users directory...
         </div>
       </div>
@@ -164,7 +216,7 @@ export default function AdminUsersPage() {
   if (role !== "admin") {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#EDF3E7] px-6 py-20">
-        <section className="max-w-md w-full rounded-[32px] border border-white/40 bg-white/30 p-8 text-center shadow-2xl backdrop-blur-xl">
+        <section className="w-full max-w-md rounded-[32px] border border-white/40 bg-white/30 p-8 text-center shadow-2xl backdrop-blur-xl">
           <h1 className="text-3xl font-black text-[#2F3A2F]">Access Denied</h1>
           <p className="mt-3 font-medium text-[#5D6B57]">
             Only admins can manage users.
@@ -185,59 +237,66 @@ export default function AdminUsersPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#EDF3E7] px-4 py-12 sm:px-6 md:px-12 lg:px-16 relative overflow-hidden">
-      {/* Decorative ambient blobs */}
-      <div className="absolute top-10 left-10 w-72 h-72 bg-white/30 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-white/20 rounded-full blur-3xl pointer-events-none" />
+    <main className="relative min-h-screen overflow-hidden bg-[#EDF3E7] px-2 py-12 sm:px-4 md:px-6 lg:px-8">
+      <div className="pointer-events-none absolute left-10 top-10 h-72 w-72 rounded-full bg-white/30 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-10 right-10 h-96 w-96 rounded-full bg-white/20 blur-3xl" />
 
-      <section className="relative z-10 mx-auto max-w-7xl rounded-[32px] border border-white/40 bg-white/20 p-6 sm:p-10 shadow-[0_8px_32px_0_rgba(0,0,0,0.04)] backdrop-blur-xl">
-        {/* Header Block */}
+      <section className="relative z-10 mx-auto w-full max-w-[1600px] rounded-[32px] border border-white/40 bg-white/20 p-4 shadow-[0_8px_32px_0_rgba(0,0,0,0.04)] backdrop-blur-xl sm:p-6 lg:p-8">
         <div className="mb-8 border-b border-white/20 pb-6">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#5D6B57] bg-white/30 px-3 py-1 rounded-full backdrop-blur-sm">
+          <span className="rounded-full bg-white/30 px-3 py-1 text-xs font-bold uppercase tracking-widest text-[#5D6B57] backdrop-blur-sm">
             Control Panel
           </span>
-          <h1 className="text-3xl sm:text-4xl font-black text-[#2F3A2F] mt-3 tracking-tight">
+
+          <h1 className="mt-3 text-3xl font-black tracking-tight text-[#2F3A2F] sm:text-4xl">
             User Management
           </h1>
-          <p className="mt-2 text-sm sm:text-base text-[#5D6B57]/90 font-medium">
+
+          <p className="mt-2 text-sm font-medium text-[#5D6B57]/90 sm:text-base">
             View active accounts, block/unblock validations, and reassign system
             roles instantly.
           </p>
         </div>
 
-        {/* HeroUI Table Container */}
-        <div className="overflow-hidden rounded-2xl border border-white/30 bg-white/10 shadow-inner backdrop-blur-md">
+        <div className="overflow-x-auto rounded-2xl border border-white/30 bg-white/10 shadow-inner backdrop-blur-md">
           <Table
-            className="text-[#2F3A2F] bg-transparent shadow-none"
+            className="w-full min-w-full table-fixed bg-transparent text-[#2F3A2F] shadow-none"
             style={{ background: "transparent" }}
           >
-            <Table.ScrollContainer>
+            <Table.ScrollContainer className="overflow-visible">
               <Table.Content aria-label="User Management Table">
-                <Table.Header className="bg-white/15 border-b border-white/30">
-                  {/* ADDED isRowHeader TO COMPLY WITH ACCESSIBILITY ERROR REQUIREMENTS */}
-                  <Table.Column allowsSorting isRowHeader>
+                <Table.Header className="border-b border-white/30 bg-white/15">
+                  <Table.Column
+                    allowsSorting
+                    isRowHeader
+                    className="w-[22%] min-w-[140px]"
+                  >
                     {({ sortDirection }) => (
                       <Table.SortableColumnHeader
                         sortDirection={sortDirection}
-                        className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4"
+                        className="p-4 text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80"
                       >
                         User / ID
                       </Table.SortableColumnHeader>
                     )}
                   </Table.Column>
-                  <Table.Column className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4">
+
+                  <Table.Column className="w-[24%] min-w-[150px] p-4 text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80">
                     Email
                   </Table.Column>
-                  <Table.Column className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4">
+
+                  <Table.Column className="w-[12%] min-w-[90px] p-4 text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80">
                     System Role
                   </Table.Column>
-                  <Table.Column className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4">
+
+                  <Table.Column className="w-[12%] min-w-[90px] p-4 text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80">
                     Current Plan
                   </Table.Column>
-                  <Table.Column className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4">
+
+                  <Table.Column className="w-[12%] min-w-[80px] p-4 text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80">
                     Status
                   </Table.Column>
-                  <Table.Column className="text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80 p-4 text-right">
+
+                  <Table.Column className="w-[18%] min-w-[150px] p-4 text-right text-xs font-bold uppercase tracking-wider text-[#2F3A2F]/80">
                     Management Actions
                   </Table.Column>
                 </Table.Header>
@@ -251,82 +310,74 @@ export default function AdminUsersPage() {
                     return (
                       <Table.Row
                         key={item._id}
-                        className={`border-b border-white/15 last:border-0 transition-all duration-200 hover:bg-white/5 ${
+                        className={`border-b border-white/15 transition-all duration-200 last:border-0 hover:bg-white/5 ${
                           isActionLoading
-                            ? "opacity-50 pointer-events-none"
+                            ? "pointer-events-none opacity-50"
                             : ""
                         }`}
                       >
-                        {/* User / ID Cell */}
-                        <Table.Cell className="p-4">
-                          <p className="font-bold text-base text-[#2F3A2F] truncate">
+                        <Table.Cell className="overflow-hidden p-4">
+                          <p className="truncate text-sm font-bold text-[#2F3A2F]">
                             {item.name || "Unnamed User"}
                           </p>
-                          <p className="text-[10px] font-mono text-[#5D6B57]/80 truncate mt-0.5">
+                          <p className="mt-0.5 truncate font-mono text-[10px] text-[#5D6B57]/80">
                             ID: {item._id}
                           </p>
                         </Table.Cell>
 
-                        {/* Email Cell */}
-                        <Table.Cell className="p-4">
-                          <p className="text-sm font-medium text-[#4B5A42] truncate">
+                        <Table.Cell className="overflow-hidden p-4">
+                          <p className="truncate text-sm font-medium text-[#4B5A42]">
                             {item.email}
                           </p>
                         </Table.Cell>
 
-                        {/* System Role Cell */}
-                        <Table.Cell className="p-4">
-                          <span className="inline-block rounded-xl border border-white/30 bg-white/20 px-3 py-1 text-xs font-bold capitalize text-[#4B5A42] backdrop-blur-sm shadow-sm">
+                        <Table.Cell className="overflow-hidden p-4">
+                          <span className="inline-block max-w-full truncate rounded-xl border border-white/30 bg-white/20 px-2 py-0.5 text-xs font-bold capitalize text-[#4B5A42] shadow-sm backdrop-blur-sm">
                             {itemRole}
                           </span>
                         </Table.Cell>
 
-                        {/* Current Plan Cell */}
-                        <Table.Cell className="p-4">
-                          <span className="inline-block rounded-xl border border-white/40 bg-white/40 px-3 py-1 text-xs font-bold uppercase tracking-wide text-[#5D6B57] shadow-sm">
+                        <Table.Cell className="overflow-hidden p-4">
+                          <span className="inline-block max-w-full truncate rounded-xl border border-white/40 bg-white/40 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-[#5D6B57] shadow-sm">
                             {item.plan || "free"}
                           </span>
                         </Table.Cell>
 
-                        {/* Status Cell */}
-                        <Table.Cell className="p-4">
+                        <Table.Cell className="overflow-hidden p-4">
                           <span
-                            className={`inline-block rounded-xl px-3 py-1 text-xs font-bold uppercase tracking-wider shadow-sm border ${
+                            className={`inline-block max-w-full truncate rounded-xl border px-2 py-0.5 text-xs font-bold uppercase tracking-wider shadow-sm ${
                               status === "blocked"
-                                ? "bg-red-500/10 border-red-500/20 text-red-700"
-                                : "bg-emerald-500/10 border-emerald-500/20 text-emerald-700"
+                                ? "border-red-500/20 bg-red-500/10 text-red-700"
+                                : "border-emerald-500/20 bg-emerald-500/10 text-emerald-700"
                             }`}
                           >
                             {status}
                           </span>
                         </Table.Cell>
 
-                        {/* Actions Cell */}
-                        <Table.Cell className="p-4 text-right">
-                          <div className="flex flex-wrap gap-2 justify-end">
+                        <Table.Cell className="overflow-hidden p-4 text-right">
+                          <div className="flex flex-row flex-nowrap items-center justify-end gap-1.5">
                             <button
                               type="button"
                               disabled={isActionLoading}
-                              onClick={() => handleBlockToggle(item)}
-                              className={`rounded-xl px-4 py-2 text-xs font-bold tracking-wide text-white transition-all shadow-sm active:scale-[0.97] disabled:opacity-40 ${
+                              onClick={() => openBlockModal(item)}
+                              className={`shrink-0 whitespace-nowrap rounded-full border px-2.5 py-1 text-[10px] font-bold tracking-wide shadow-sm transition-all active:scale-[0.97] disabled:opacity-40 ${
                                 status === "blocked"
-                                  ? "bg-[#6B8E23] hover:bg-[#6B8E23]/90"
-                                  : "bg-red-600 hover:bg-red-700"
+                                  ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20"
+                                  : "border-red-500/20 bg-red-500/10 text-red-700 hover:bg-red-500/20"
                               }`}
                             >
-                              {status === "blocked"
-                                ? "Unblock Account"
-                                : "Block Account"}
+                              {status === "blocked" ? "Unblock" : "Block"}
                             </button>
 
                             {itemRole !== "admin" && (
                               <button
                                 type="button"
                                 disabled={isActionLoading}
-                                onClick={() => handleRoleChange(item, "admin")}
-                                className="rounded-xl bg-[#2F3A2F] px-4 py-2 text-xs font-bold tracking-wide text-[#EDF3E7] shadow-sm transition-all hover:bg-[#2F3A2F]/90 active:scale-[0.97] disabled:opacity-40"
+                                onClick={() => openRoleModal(item, "admin")}
+                                className="shrink-0 whitespace-nowrap rounded-full border border-[#2F3A2F]/20 bg-[#2F3A2F]/10 px-2.5 py-1 text-[10px] font-bold tracking-wide text-[#2F3A2F] shadow-sm transition-all hover:bg-[#2F3A2F]/20 active:scale-[0.97] disabled:opacity-40"
                               >
-                                Make Admin
+                                Admin
                               </button>
                             )}
 
@@ -334,10 +385,10 @@ export default function AdminUsersPage() {
                               <button
                                 type="button"
                                 disabled={isActionLoading}
-                                onClick={() => handleRoleChange(item, "member")}
-                                className="rounded-xl bg-amber-600 px-4 py-2 text-xs font-bold tracking-wide text-white shadow-sm transition-all hover:bg-amber-700 active:scale-[0.97] disabled:opacity-40"
+                                onClick={() => openRoleModal(item, "member")}
+                                className="shrink-0 whitespace-nowrap rounded-full border border-amber-500/20 bg-amber-500/10 px-2.5 py-1 text-[10px] font-bold tracking-wide text-amber-700 shadow-sm transition-all hover:bg-amber-500/20 active:scale-[0.97] disabled:opacity-40"
                               >
-                                Demote to Member
+                                Demote
                               </button>
                             )}
                           </div>
@@ -348,6 +399,7 @@ export default function AdminUsersPage() {
                 </Table.Body>
               </Table.Content>
             </Table.ScrollContainer>
+
             <Table.Footer>
               {users.length === 0 && (
                 <div className="p-8 text-center text-sm font-medium text-[#5D6B57]">
@@ -358,6 +410,54 @@ export default function AdminUsersPage() {
           </Table>
         </div>
       </section>
+
+      {confirmOpen && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
+            <h2
+              className={`text-2xl font-black ${
+                confirmAction?.type === "status" &&
+                confirmAction?.nextStatus === "blocked"
+                  ? "text-red-600"
+                  : "text-[#2F3A2F]"
+              }`}
+            >
+              {confirmAction?.title}
+            </h2>
+
+            <p className="mt-4 text-sm leading-6 text-[#4B5A42]">
+              {confirmAction?.message}
+            </p>
+
+            <p className="mt-2 text-xs text-gray-500">
+              Please confirm before continuing.
+            </p>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <Button
+                variant="bordered"
+                onPress={closeModal}
+                isDisabled={Boolean(actionLoadingId)}
+              >
+                Cancel
+              </Button>
+
+              <Button
+                color={
+                  confirmAction?.type === "status" &&
+                  confirmAction?.nextStatus === "blocked"
+                    ? "danger"
+                    : "primary"
+                }
+                onPress={handleConfirmAction}
+                isDisabled={Boolean(actionLoadingId)}
+              >
+                {actionLoadingId ? "Processing..." : confirmAction?.confirmText}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

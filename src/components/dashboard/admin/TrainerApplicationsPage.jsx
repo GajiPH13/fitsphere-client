@@ -1,9 +1,12 @@
+
 "use client";
 
 import React, { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { Button } from "@heroui/react";
+import toast from "react-hot-toast";
 
 export default function TrainerApplicationsPage() {
   const router = useRouter();
@@ -13,12 +16,15 @@ export default function TrainerApplicationsPage() {
 
   const user = session?.user;
   const role = user?.role;
-  // const applicationId = user?.applicationId;
 
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionLoadingId, setActionLoadingId] = useState(null);
   const [error, setError] = useState("");
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedApplication, setSelectedApplication] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState("");
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -37,7 +43,6 @@ export default function TrainerApplicationsPage() {
       try {
         setLoading(true);
 
-        // const res = await fetch(`${API_URL}/api/trainer-applications`);
         const res = await fetch(`${API_URL}/api/trainer-applications`, {
           headers: {
             "Content-Type": "application/json",
@@ -45,14 +50,16 @@ export default function TrainerApplicationsPage() {
           },
         });
 
+        const data = await res.json();
+
         if (!res.ok) {
-          throw new Error("Failed to fetch trainer applications");
+          throw new Error(data.message || "Failed to fetch trainer applications");
         }
 
-        const data = await res.json();
-        setApplications(data);
+        setApplications(Array.isArray(data) ? data : data.applications || []);
       } catch (err) {
         setError(err.message);
+        toast.error(err.message || "Failed to fetch trainer applications");
       } finally {
         setLoading(false);
       }
@@ -61,18 +68,34 @@ export default function TrainerApplicationsPage() {
     fetchApplications();
   }, [API_URL, user, role, isPending, router]);
 
-  const handleStatusUpdate = async (application, status) => {
-    const confirmAction = window.confirm(
-      `Are you sure you want to ${status} this application?`,
-    );
+  const openStatusModal = (application, status) => {
+    setSelectedApplication(application);
+    setSelectedStatus(status);
+    setIsOpen(true);
+  };
 
-    if (!confirmAction) return;
+  const closeStatusModal = () => {
+    setSelectedApplication(null);
+    setSelectedStatus("");
+    setIsOpen(false);
+  };
 
-    setActionLoadingId(application._id);
+  const handleStatusUpdate = async () => {
+    if (!selectedApplication?._id || !selectedStatus) {
+      toast.error("No application selected.");
+      return;
+    }
 
-    try {
+    if (!user?.id) {
+      toast.error("Unauthorized. User ID is missing.");
+      return;
+    }
+
+    setActionLoadingId(selectedApplication._id);
+
+    const updatePromise = async () => {
       const res = await fetch(
-        `${API_URL}/api/trainer-applications/${application._id}/status`,
+        `${API_URL}/api/trainer-applications/${selectedApplication._id}/status`,
         {
           method: "PATCH",
           headers: {
@@ -80,31 +103,41 @@ export default function TrainerApplicationsPage() {
             "x-user-id": user.id,
           },
           body: JSON.stringify({
-            status,
-            userId: application.userId,
+            status: selectedStatus,
+            userId: selectedApplication.userId,
           }),
-        },
+        }
       );
 
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.message || "Failed to update application status");
-        return;
+        throw new Error(data.message || "Failed to update application status");
       }
 
       setApplications((prev) =>
         prev.map((item) =>
-          item._id === application._id
-            ? { ...item, status, updatedAt: new Date().toISOString() }
-            : item,
-        ),
+          item._id === selectedApplication._id
+            ? {
+                ...item,
+                status: selectedStatus,
+                updatedAt: new Date().toISOString(),
+              }
+            : item
+        )
       );
 
-      alert(data.message || "Application updated successfully");
-    } catch (error) {
-      console.error("Application status update error:", error);
-      alert("Something went wrong.");
+      closeStatusModal();
+
+      return data.message || "Application updated successfully";
+    };
+
+    try {
+      await toast.promise(updatePromise(), {
+        loading: "Updating application...",
+        success: (message) => message,
+        error: (err) => err.message || "Something went wrong.",
+      });
     } finally {
       setActionLoadingId(null);
     }
@@ -248,7 +281,7 @@ export default function TrainerApplicationsPage() {
                           type="button"
                           disabled={actionLoadingId === application._id}
                           onClick={() =>
-                            handleStatusUpdate(application, "approved")
+                            openStatusModal(application, "approved")
                           }
                           className="rounded-full bg-[#6B8E23] px-5 py-3 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:bg-gray-400"
                         >
@@ -261,7 +294,7 @@ export default function TrainerApplicationsPage() {
                           type="button"
                           disabled={actionLoadingId === application._id}
                           onClick={() =>
-                            handleStatusUpdate(application, "rejected")
+                            openStatusModal(application, "rejected")
                           }
                           className="rounded-full bg-red-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:bg-gray-400"
                         >
@@ -276,6 +309,58 @@ export default function TrainerApplicationsPage() {
           </div>
         )}
       </section>
+
+      {isOpen && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
+            <h2
+              className={`text-2xl font-black ${
+                selectedStatus === "approved"
+                  ? "text-[#2F3A2F]"
+                  : "text-red-600"
+              }`}
+            >
+              {selectedStatus === "approved"
+                ? "Approve Application"
+                : "Reject Application"}
+            </h2>
+
+            <p className="mt-4 text-[#4B5A42]">
+              Are you sure you want to {selectedStatus}{" "}
+              <span className="font-bold text-[#2F3A2F]">
+                {selectedApplication?.userName}
+              </span>
+              's trainer application?
+            </p>
+
+            <p className="mt-2 text-sm text-gray-500">
+              This action will update the application status immediately.
+            </p>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <Button
+                variant="bordered"
+                onPress={closeStatusModal}
+                isDisabled={Boolean(actionLoadingId)}
+              >
+                Cancel
+              </Button>
+
+              <Button
+                color={selectedStatus === "approved" ? "primary" : "danger"}
+                onPress={handleStatusUpdate}
+                isDisabled={Boolean(actionLoadingId)}
+              >
+                {actionLoadingId
+                  ? "Processing..."
+                  : selectedStatus === "approved"
+                    ? "Approve"
+                    : "Reject"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

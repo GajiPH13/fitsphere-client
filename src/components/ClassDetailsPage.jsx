@@ -273,6 +273,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function ClassDetailsPage() {
   const { id } = useParams();
@@ -481,12 +482,23 @@ export default function ClassDetailsPage() {
             height={560}
             className="h-140 w-full rounded-[28px] object-cover"
           />
+          <div className="mt-8">
+              <Link
+                href="/allclasses"
+                className="inline-flex items-center gap-1.5 rounded-full border border-white bg-white/40 px-5 py-2.5 text-xs font-bold text-[#2F3A2F] shadow-sm backdrop-blur-md transition hover:bg-white/70"
+              >
+                ← Back to all classes
+              </Link>
+            </div>
         </div>
-
+        
         <div>
+         
           <span className="rounded-full bg-[#DDE5D0] px-4 py-2 text-sm font-semibold text-[#556B2F]">
             {classData.level}
           </span>
+           
+            
 
           <h1 className="mt-6 text-5xl font-bold text-[#2F3A2F]">
             {classData.title}

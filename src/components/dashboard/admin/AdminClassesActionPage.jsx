@@ -1,11 +1,17 @@
+
 "use client";
 
 import React, { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import toast from "react-hot-toast";
+import {  Button } from "@heroui/react";
 
 export default function AdminClassesPage() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
 
@@ -19,63 +25,88 @@ export default function AdminClassesPage() {
   const [error, setError] = useState("");
 
   const handleStatusUpdate = async (classId, status) => {
-    const confirmAction = window.confirm(
-      `Are you sure you want to ${status} this class?`,
-    );
-
-    if (!confirmAction) return;
-
-    const res = await fetch(`${API_URL}/api/classes/${classId}/status`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ status }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      alert(data.message || "Failed to update class status");
+    if (!user?.id) {
+      toast.error("Unauthorized. User ID is missing.");
       return;
     }
 
-    setClasses((prev) =>
-      prev.map((item) => (item._id === classId ? { ...item, status } : item)),
-    );
-
-    alert(data.message);
-  };
-
-  const handleDeleteClass = async (classId) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this class?",
-    );
-
-    if (!confirmDelete) return;
-
-    try {
-      const res = await fetch(`${API_URL}/api/classes/${classId}`, {
-        method: "DELETE",
+    const updatePromise = async () => {
+      const res = await fetch(`${API_URL}/api/classes/${classId}/status`, {
+        method: "PATCH",
         headers: {
-            "Content-Type": "application/json",
-            "x-user-id": user.id,
-          },
+          "Content-Type": "application/json",
+          "x-user-id": user.id,
+        },
+        body: JSON.stringify({ status }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.message || "Failed to delete class");
-        return;
+        throw new Error(data.message || "Failed to update class status");
       }
 
-      setClasses((prev) => prev.filter((item) => item._id !== classId));
+      setClasses((prev) =>
+        prev.map((item) => (item._id === classId ? { ...item, status } : item)),
+      );
 
-      alert("Class deleted successfully");
-    } catch (error) {
-      console.error("Delete class error:", error);
-      alert("Something went wrong while deleting class");
+      return data.message || `Class ${status} successfully`;
+    };
+
+    toast.promise(updatePromise(), {
+      loading: `Updating class to ${status}...`,
+      success: (message) => message,
+      error: (err) => err.message || "Something went wrong.",
+    });
+  };
+
+  const handleDeleteClass = async () => {
+    if (!selectedClass?._id) {
+      toast.error("No class selected.");
+      return;
+    }
+
+    if (!user?.id) {
+      toast.error("Unauthorized. User ID is missing.");
+      return;
+    }
+
+    setDeleteLoading(true);
+
+    const deletePromise = async () => {
+      const res = await fetch(`${API_URL}/api/classes/${selectedClass._id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": user.id,
+        },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to delete class");
+      }
+
+      setClasses((prev) =>
+        prev.filter((item) => item._id !== selectedClass._id),
+      );
+
+      setIsOpen(false);
+      setSelectedClass(null);
+
+      return "Class deleted successfully";
+    };
+
+    try {
+      await toast.promise(deletePromise(), {
+        loading: "Deleting class...",
+        success: (message) => message,
+        error: (err) =>
+          err.message || "Something went wrong while deleting class",
+      });
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -84,7 +115,7 @@ export default function AdminClassesPage() {
       if (isPending) return;
 
       if (!user) {
-        router.push("/auth/signin");
+        router.replace("/auth/signin");
         return;
       }
 
@@ -96,7 +127,6 @@ export default function AdminClassesPage() {
       try {
         setLoading(true);
 
-        // const res = await fetch(`${API_URL}/api/admin/classes`);
         const res = await fetch(`${API_URL}/api/admin/classes`, {
           method: "GET",
           headers: {
@@ -105,16 +135,15 @@ export default function AdminClassesPage() {
           },
         });
 
-       
-
         if (!res.ok) {
           throw new Error("Failed to fetch classes");
         }
 
         const data = await res.json();
-        setClasses(data);
+        setClasses(Array.isArray(data) ? data : data.classes || []);
       } catch (err) {
         setError(err.message);
+        toast.error(err.message || "Failed to fetch classes");
       } finally {
         setLoading(false);
       }
@@ -243,7 +272,10 @@ export default function AdminClassesPage() {
                   </button>
 
                   <button
-                    onClick={() => handleDeleteClass(item._id)}
+                    onClick={() => {
+                      setSelectedClass(item);
+                      setIsOpen(true);
+                    }}
                     type="button"
                     className="rounded-full bg-red-500 px-5 py-2 text-sm font-semibold text-white transition hover:bg-red-600"
                   >
@@ -255,6 +287,46 @@ export default function AdminClassesPage() {
           </div>
         )}
       </section>
+     {isOpen && (
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
+    <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
+      <h2 className="text-2xl font-black text-red-600">Delete Class</h2>
+
+      <p className="mt-4 text-[#4B5A42]">
+        Are you sure you want to delete{" "}
+        <span className="font-bold text-[#2F3A2F]">
+          {selectedClass?.title}
+        </span>
+        ?
+      </p>
+
+      <p className="mt-2 text-sm text-gray-500">
+        This action cannot be undone.
+      </p>
+
+      <div className="mt-6 flex justify-end gap-3">
+        <Button
+          variant="bordered"
+          onPress={() => {
+            setIsOpen(false);
+            setSelectedClass(null);
+          }}
+          isDisabled={deleteLoading}
+        >
+          Cancel
+        </Button>
+
+        <Button
+          color="danger"
+          onPress={handleDeleteClass}
+          isDisabled={deleteLoading}
+        >
+          {deleteLoading ? "Deleting..." : "Delete"}
+        </Button>
+      </div>
+    </div>
+  </div>
+)}
     </main>
   );
 }
