@@ -342,7 +342,7 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
 # ⚙ Installation
 
 ```bash
-git clone https://github.com/yourusername/fitsphere.git
+git clone https://github.com/GajiPH13/fitsphere-client
 
 cd fitsphere
 
