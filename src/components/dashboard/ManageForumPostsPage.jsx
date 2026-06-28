@@ -436,7 +436,7 @@ export default function ManageForumPostsPage() {
 
           <Link
             href={`/dashboard/${role}/forum/create`}
-            className="inline-flex items-center justify-center rounded-full border-2 border-[#4F6B1B] bg-[#6B8E23] px-7 py-3 font-bold text-white dark:text-zinc-100 shadow-xl transition-all hover:bg-[#55741C]"
+            className="inline-flex items-center justify-center rounded-full border-2 border-[#4F6B1B] bg-[#6B8E23] px-7 py-3 font-bold text-[#2F3A2F] dark:text-zinc-50 shadow-xl transition-all hover:bg-[#55741C]"
           >
             Create New Post
           </Link>

@@ -88,6 +88,16 @@ export default function DashboardLayout({ children }) {
           </div>
 
           {children}
+          {/* Dashboard Footer */}
+          <footer className="mt-16 border-t border-[#d7dfc6]/40 dark:border-zinc-800 pt-6 text-center">
+            <p className="text-xs font-medium text-[#5D6B57] dark:text-zinc-500">
+              FitSphere Dashboard • Version 1.0.0
+            </p>
+
+            <p className="mt-1 text-[11px] text-[#8A9884] dark:text-zinc-600">
+              © {new Date().getFullYear()} Gaji Najrul Islam
+            </p>
+          </footer>
         </main>
       </div>
     </>

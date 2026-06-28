@@ -3,8 +3,15 @@
 
 import Link from "next/link";
 import { ArrowLeft, LayoutList } from "@gravity-ui/icons";
+import { authClient } from "@/lib/auth-client";
 
 export default function UnderConstructionPage() {
+    const { data: session } = authClient.useSession();
+
+const dashboardLink = session?.user
+  ? `/dashboard/${session.user.role}`
+  : "/";
+
   return (
     <main className="relative flex min-h-screen items-center justify-center bg-gradient-to-br from-[#EDF3E7] via-[#E6EFD9] to-[#DDE5D0] dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 px-6 overflow-hidden antialiased transition-colors duration-300">
       
@@ -55,7 +62,7 @@ export default function UnderConstructionPage() {
           </Link>
 
           <Link
-            href="/dashboard"
+            href={dashboardLink}
             className="flex h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-[#d7dfc6] dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/40 px-6 text-sm font-bold text-[#2F3A2F] dark:text-zinc-300 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/80 dark:hover:bg-zinc-900/80 active:scale-[0.98]"
           >
             <LayoutList className="h-4 w-4 text-[#6B8E23] dark:text-[#87A96B]" />

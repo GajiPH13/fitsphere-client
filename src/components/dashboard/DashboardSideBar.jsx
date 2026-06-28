@@ -97,7 +97,7 @@ export function DashboardSideBar({ role = "member", mobileOnly = false }) {
             <Icon
               className={`size-5 ${
                 isActive
-                  ? "text-white"
+                  ? "text-[#2F3A2F] dark:text-zinc-50"
                   : "text-[#5D6B57] dark:text-zinc-400"
               }`}
             />
