@@ -20,6 +20,11 @@ This project demonstrates how multiple real-world business processes can be inte
 
 ---
 
+## 🌐 Live Demo
+
+👉 https://fitsphere-client-pied.vercel.app
+
+---
 # 🎯 Project Purpose
 
 The primary objective of FitSphere is to solve several practical challenges faced by modern fitness organizations:
